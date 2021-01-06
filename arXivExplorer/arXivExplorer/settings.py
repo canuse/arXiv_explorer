@@ -72,6 +72,8 @@ WSGI_APPLICATION = 'arXivExplorer.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# please save db address, port and password in configure file. DO NOT hardcode it here.
+# The configure file is in arXivExplorer folder. (The same as manage.py)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
