@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'arXivExplorer.wsgi.application'
 # The configure file is in arXivExplorer folder. (The same as manage.py)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config['pg_dbname'],
+        'USER': config['pg_username'],
+        'PASSWORD': config['pg_password'],
+        'HOST': config['pg_host'],
+        'PORT': config['pg_port'],
     }
 }
 
