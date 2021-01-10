@@ -11,5 +11,18 @@ class BM25(BaseAlgorithm):
     4. query expansion
     5. get top used words (for input completion)
     """
+
     def __init__(self):
         super().__init__()
+
+    @staticmethod
+    def search_by_words(word_list):
+        return [1, 2, 3]
+
+    @staticmethod
+    def query_expansion(word_list, nrel=10, nexp=2):
+        return word_list.append('example')
+
+    @staticmethod
+    def get_relative_article(arxivID_list, nart=10):
+        return [1, 2, 3, 4, 5]
