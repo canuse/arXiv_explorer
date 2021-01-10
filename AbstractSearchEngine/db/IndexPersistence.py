@@ -55,3 +55,33 @@ def delete_index(key1: str, key2: str, key3: str) -> bool:
         return set_index(key1, key2, key3, 0)
     except:
         return False
+
+
+def delete_all_index(key1=None, key2=None, key3=None):
+    """
+    Delete all index.
+    If key1!=None, then delete all index contains key1. key2 and key3 are similar.
+    For example, if key1=none, key2="apple" and key3="BM25", then this method will remove
+    all index that uses BM25 and term "apple".
+    :param key1: index key 1 (for example arxiv_id)
+    :param key2: index key 2 (for example the term)
+    :param key3: index key 3 (for example the algorithm(TFIDF or BM25))
+    :return bool: return if the operation successes.
+    """
+    if key1 is None and key2 is None and key3 is None:
+        return True
+    try:
+        files = os.listdir('indexTemp/')
+        for file in files:
+            fkey1, fkey2, fkey3 = file.split('-')
+            flag = True
+            if key1 is not None:
+                flag = flag | (fkey1 == key1)
+            if key2 is not None:
+                flag = flag | (fkey2 == key2)
+            if key3 is not None:
+                flag = flag | (fkey3 == key3)
+            if flag:
+                set_index(fkey1, fkey2, fkey3, 0)
+    except:
+        return False
