@@ -7,7 +7,7 @@ class BaseAlgorithm(ABC):
 
     @staticmethod
     @abstractmethod
-    def update_index():
+    def update_index(index):
         return False
 
     @staticmethod
@@ -26,11 +26,10 @@ class BaseAlgorithm(ABC):
         return []
 
 
-class BaseIndex(ABC):
+class BaseIndex:
     def __init__(self):
         self.document_index = {}
 
-    @abstractmethod
     def add_term(self, term, arxiv_id):
         if term not in self.document_index:
             self.document_index[term] = {arxiv_id: 1}
@@ -40,14 +39,12 @@ class BaseIndex(ABC):
             else:
                 self.document_index[term][arxiv_id] += 1
 
-    @abstractmethod
     def get_document_freq(self, term):
         if term in self.document_index:
             return len(self.document_index[term].keys())
         else:
             return 0
 
-    @abstractmethod
     def get_term_freq(self, term, arxiv_id):
         if term in self.document_index:
             if arxiv_id in self.document_index[term]:
