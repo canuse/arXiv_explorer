@@ -1,15 +1,26 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class BaseAlgorithm(ABC):
     def __init__(self):
         pass
 
-    def search_by_words(self, word_list):
+    @staticmethod
+    @abstractmethod
+    def update_index():
+        return False
+
+    @staticmethod
+    @abstractmethod
+    def search_by_words(word_list):
         return []
 
-    def query_expansion(self, word_list, nrel=10, nexp=2):
+    @staticmethod
+    @abstractmethod
+    def query_expansion(word_list, nrel=10, nexp=2):
         return []
 
-    def get_relative_article(self, arxivID_list, nart=10):
+    @staticmethod
+    @abstractmethod
+    def get_relative_article(arxivID_list, nart=10):
         return []
