@@ -53,3 +53,11 @@ class BaseIndex:
                 return 0
         else:
             return 0
+
+    def get_document_length(self, arxiv_id):
+        if "WORDCOUNT" not in self.document_index:
+            return 0
+        if arxiv_id in self.document_index["WORDCOUNT"]:
+            return self.document_index["WORDCOUNT"][arxiv_id]
+        else:
+            return 0
