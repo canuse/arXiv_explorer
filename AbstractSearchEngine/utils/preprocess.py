@@ -57,7 +57,7 @@ def remove_stop_word(wordlist):
     return_list = []
     for i in wordlist:
         if i in STOPWORD:
-            return_list.append(wordlist)
+            return_list.append(i)
     return return_list
 
 
