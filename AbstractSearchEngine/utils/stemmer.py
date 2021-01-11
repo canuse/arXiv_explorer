@@ -6,7 +6,7 @@ stemmer = Stemmer('porter')
 
 def stem(term):
     stemmed_word = stemmer.stemWord(term)
-    update_stem_history(term, stemmed_word)
+    #update_stem_history(term, stemmed_word)
     return stemmed_word
 
 
