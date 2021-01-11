@@ -62,7 +62,7 @@ def remove_stop_word(wordlist):
 
 
 def tokenize(content):
-    return re.split(r'\w+', content)
+    return re.findall(r'\w+', content)
 
 
 def preprocess(content):
