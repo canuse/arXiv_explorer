@@ -1,11 +1,12 @@
 from math import log
 
-from AbstractSearchEngine.db.IndexPersistence import get_index, set_index, delete_all_index
+from AbstractSearchEngine.db.IndexPersistence import get_index, set_index, delete_all_index, get_all_index
 from AbstractSearchEngine.indexing.BaseAlgorithm import BaseAlgorithm, BaseIndex
+from AbstractSearchEngine.utils.stemmer import unstem
 
 BM25_b = 0.3
 BM25_delta = 1
-BM25_preset = [0] + [(x / 1000) / ((x / 1000) - 1) * log((x / 1000)) if x != 1000 else 1 for x in range(1, 3000)]
+BM25_preset = [0] + [(x / 1000) / ((x / 1000) - 1) * log((x / 1000)) if x != 1000 else 1 for x in range(1, 5000)]
 
 
 class BM25(BaseAlgorithm):
@@ -35,9 +36,10 @@ class BM25(BaseAlgorithm):
                 sum_tfcw += log(index.get_term_freq(term, docu) / (1 - BM25_b + BM25_b * index.get_document_length(docu)
                                                                    / avgdl) + 1) / index.get_document_freq(term)
             k1 = 0
-            while k1 < 3000:
+            while k1 < 5000:
                 if BM25_preset[k1] > sum_tfcw:
                     break
+                k1 += 1
             k1 = k1 / 1000
             for docu in index.document_index[term].keys():
                 score = log((document_number + 1) / index.get_document_freq(term)) * (
@@ -48,11 +50,41 @@ class BM25(BaseAlgorithm):
 
     @staticmethod
     def search_by_words(word_list):
-        return [1, 2, 3]
+        all_document = {}
+        union_document = set()
+        for term in word_list:
+            term_document = get_all_index(key1=term, key3="BM25TLS")
+            all_document[term] = {}
+            for i in term_document:
+                union_document.add(i[1])
+                all_document[term][i[1]] = i[3]
+        total_score = []
+        for arxiv_id in union_document:
+            score = 0
+            for term in word_list:
+                if arxiv_id in all_document[term]:
+                    score += all_document[term][arxiv_id]
+                else:
+                    score += 0
+            total_score.append((arxiv_id, score))
+        return total_score.sort(key=lambda x: x[-1], reverse=True)
 
     @staticmethod
     def query_expansion(word_list, nrel=10, nexp=2):
-        return word_list.append('example')
+        raw_article = BM25.search_by_words(word_list)[:nrel]
+        word_rank = {}
+        for docu in raw_article:
+            term_document = get_all_index(key2=docu, key3="BM25TLS")
+            for i in term_document:
+                if i[1] in word_rank:
+                    word_rank[i[1]] += i[3]
+                else:
+                    word_rank[i[1]] = i[3]
+        new_word_rank = [(i, word_rank[i]) for i in word_rank]
+        new_word_rank.sort(key=lambda x: x[-1], reverse=True)
+        for i in range(min(nexp, len(new_word_rank))):
+            word_list.append(unstem(new_word_rank[i][0]))
+        return word_list
 
     @staticmethod
     def get_relative_article(arxivID_list, nart=10):
