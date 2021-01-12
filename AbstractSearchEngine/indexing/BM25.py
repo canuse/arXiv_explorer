@@ -67,13 +67,28 @@ class BM25(BaseAlgorithm):
                 else:
                     score += 0
             total_score.append((arxiv_id, score))
-        return total_score.sort(key=lambda x: x[-1], reverse=True)
+        total_score.sort(key=lambda x: x[-1], reverse=True)
+        return total_score[:100]
 
     @staticmethod
-    def query_expansion(word_list, nrel=10, nexp=2):
+    def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
         raw_article = BM25.search_by_words(word_list)[:nrel]
+        length = len(word_list)
+        expand_word = BM25.get_article_topic(raw_article, 100)
+        if allow_dup:
+            for i in expand_word:
+                word_list.append(i)
+        else:
+            for i in expand_word:
+                if i not in word_list:
+                    word_list.append(i)
+        return word_list[:length + nexp]
+
+    @staticmethod
+    def get_article_topic(arxivID_list, nexp):
         word_rank = {}
-        for docu in raw_article:
+        word_list = []
+        for docu in arxivID_list:
             term_document = get_all_index(key2=docu, key3="BM25TLS")
             for i in term_document:
                 if i[1] in word_rank:
@@ -88,4 +103,14 @@ class BM25(BaseAlgorithm):
 
     @staticmethod
     def get_relative_article(arxivID_list, nart=10):
-        return [1, 2, 3, 4, 5]
+        topic_term = BM25.get_article_topic(arxivID_list, 10)
+        result = BM25.search_by_words(topic_term)
+        ret = []
+        cnt = 0
+        for i in result:
+            if i[0] not in arxivID_list:
+                ret.append(i)
+                cnt += 1
+            if cnt > 10:
+                break
+        return ret[:10]

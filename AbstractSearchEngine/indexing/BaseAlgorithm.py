@@ -17,7 +17,7 @@ class BaseAlgorithm(ABC):
 
     @staticmethod
     @abstractmethod
-    def query_expansion(word_list, nrel=10, nexp=2):
+    def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
         return []
 
     @staticmethod
