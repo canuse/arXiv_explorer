@@ -23,20 +23,20 @@ class ArxivDocument(models.Model):
 
 
 class ArxivRank(models.Model):
-    word = models.CharField(max_length=20, blank=True, null=True)
-    paper = models.CharField(max_length=20, blank=True, null=True)
-    algorithm = models.CharField(max_length=20, blank=True, null=True)
+    word = models.TextField( blank=True, null=True)
+    paper = models.TextField( blank=True, null=True)
+    algorithm = models.TextField( blank=True, null=True)
     rank_value = models.FloatField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'arxiv_rank'
-        unique_together = (('word', 'paper', 'algorithm'),)
+
 
 
 class StemPair(models.Model):
-    key = models.CharField(primary_key=True, max_length=20)
-    value = models.CharField(max_length=20, blank=True, null=True)
+    key = models.TextField(primary_key=True)
+    value = models.TextField( blank=True, null=True)
 
     class Meta:
         managed = False

@@ -4,6 +4,8 @@
 # please keep the returns and behaviors identical, but store them in SQL.
 
 from AbstractSearchEngine.models import ArxivRank
+
+
 # ArxivRank model has 4 columns: word / paper(arvix_id) / algorithm / rank_value
 
 def set_index(key1: str, key2: str, key3: str, value) -> bool:
@@ -117,7 +119,14 @@ def get_all_index(key1=None, key2=None, key3=None):
         if key3 is not None:
             temp = temp.filter(algorithm=key3)
         for i in temp:
-            ret_list.append(i.paper)
+            ret_list.append([i.paper, i.word, i.algorithm, i.rank_value])
         return ret_list
     except:
         return []
+
+
+def set_index_bulk(bulk_index):
+    bulk_data = []
+    for i in bulk_index:
+        bulk_data.append(ArxivRank(paper=i[0], word=i[1], algorithm=i[2], rank_value=i[3]))
+    ArxivRank.objects.bulk_create(bulk_data)

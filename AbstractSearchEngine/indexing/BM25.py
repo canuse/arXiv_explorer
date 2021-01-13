@@ -1,8 +1,10 @@
 from math import log
 
-from AbstractSearchEngine.db.IndexPersistence import get_index, set_index, delete_all_index, get_all_index
+from AbstractSearchEngine.db.IndexPersistence import get_index, set_index, delete_all_index, get_all_index, \
+    set_index_bulk
 from AbstractSearchEngine.indexing.BaseAlgorithm import BaseAlgorithm, BaseIndex
 from AbstractSearchEngine.utils.stemmer import unstem
+from tqdm import tqdm
 
 BM25_b = 0.3
 BM25_delta = 1
@@ -28,7 +30,9 @@ class BM25(BaseAlgorithm):
         document_length = list(index.document_index['WORDCOUNT'].values())
         document_number = len(document_length)
         avgdl = sum(document_length) / len(document_length)
-        for term in index.document_index.keys():
+
+        for term in tqdm(index.document_index.keys()):
+            index_rank_list = []
             if term == 'WORDCOUNT':
                 continue
             sum_tfcw = 0
@@ -46,18 +50,19 @@ class BM25(BaseAlgorithm):
                     (k1 + 1) * index.get_term_freq(term, docu) / (
                     k1 + (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
                     index.get_term_freq(term, docu)) + BM25_delta)
-                set_index(term, docu, "BM25TLS", score)
+                index_rank_list.append((docu, term, "BM25TLS", score))
+            set_index_bulk(index_rank_list)
 
     @staticmethod
     def search_by_words(word_list):
         all_document = {}
         union_document = set()
         for term in word_list:
-            term_document = get_all_index(key1=term, key3="BM25TLS")
+            term_document = get_all_index(key2=term, key3="BM25TLS")
             all_document[term] = {}
             for i in term_document:
-                union_document.add(i[1])
-                all_document[term][i[1]] = i[3]
+                union_document.add(i[0])
+                all_document[term][i[0]] = i[3]
         total_score = []
         for arxiv_id in union_document:
             score = 0
@@ -89,7 +94,7 @@ class BM25(BaseAlgorithm):
         word_rank = {}
         word_list = []
         for docu in arxivID_list:
-            term_document = get_all_index(key2=docu, key3="BM25TLS")
+            term_document = get_all_index(key1=docu, key3="BM25TLS")
             for i in term_document:
                 if i[1] in word_rank:
                     word_rank[i[1]] += i[3]
