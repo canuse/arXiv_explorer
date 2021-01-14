@@ -91,8 +91,7 @@ def delete_all_index(key1=None, key2=None, key3=None):
             temp = temp.filter(word=key2)
         if key3 is not None:
             temp = temp.filter(algorithm=key3)
-        for i in temp:
-            i.delete()
+        temp.delete()
     except:
         return False
 
