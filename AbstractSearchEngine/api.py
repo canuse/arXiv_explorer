@@ -15,7 +15,7 @@ def getDatial(request):
     arxiv_id = request.GET.get("arxivID")
     arxiv_doc = ArxivDocument.objects.get(arxiv_id=arxiv_id)
     
-    # TODO:
+    # TODO: 
     # 1. ORM接口存储在.Meta的什么地方
     ret_list.append(arxiv_doc.metadata)
     return ret_list
