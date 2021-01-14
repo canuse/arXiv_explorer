@@ -18,3 +18,7 @@ def get_arxiv_document_by_id(arxiv_id):
         return ArxivDocument.objects.get(arxiv_id=arxiv_id)
     else:
         return None
+
+def get_arxiv_document_by_ids(arxiv_ids):
+    # return the documents that in arxiv_ids, or None if not found.
+    return ArxivDocument.objects.filter(arxiv_id__in=arxiv_ids)
