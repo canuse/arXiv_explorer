@@ -133,3 +133,4 @@ config.json
 indexTemp/
 arXivExplorer/indexTemp/
 arXivExplorer/arXivExplorer/indexTemp/
+.vscode
