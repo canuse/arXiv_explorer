@@ -23,9 +23,9 @@ class ArxivDocument(models.Model):
 
 
 class ArxivRank(models.Model):
-    word = models.TextField( blank=True, null=True)
-    paper = models.TextField( blank=True, null=True)
-    algorithm = models.TextField( blank=True, null=True)
+    word = models.TextField(blank=True, null=True)
+    paper = models.TextField(blank=True, null=True)
+    algorithm = models.TextField(blank=True, null=True)
     rank_value = models.FloatField(blank=True, null=True)
 
     class Meta:
@@ -33,11 +33,21 @@ class ArxivRank(models.Model):
         db_table = 'arxiv_rank'
 
 
-
 class StemPair(models.Model):
     key = models.TextField(primary_key=True)
-    value = models.TextField( blank=True, null=True)
+    value = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'stem_pair'
+
+
+class TermAppearance(models.Model):
+    word = models.TextField(blank=True, null=True)
+    document_freq = models.IntegerField(blank=True, null=True)
+    term_freq = models.TextField(blank=True, null=True)
+    id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'term_appearance'
