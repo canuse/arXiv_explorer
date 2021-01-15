@@ -1,7 +1,7 @@
 from math import log
 
 from AbstractSearchEngine.db.IndexPersistence import get_index, set_index, delete_all_index, get_all_index, \
-    set_index_bulk
+    IndexBulkInsert
 from AbstractSearchEngine.indexing.BaseAlgorithm import BaseAlgorithm, BaseIndex
 from AbstractSearchEngine.utils.stemmer import unstem
 from tqdm import tqdm
@@ -30,9 +30,8 @@ class BM25(BaseAlgorithm):
         document_length = list(index.document_index['WORDCOUNT'].values())
         document_number = len(document_length)
         avgdl = sum(document_length) / len(document_length)
-
-        for term in tqdm(index.document_index.keys()):
-            index_rank_list = []
+        index_insert_handler = IndexBulkInsert(save_iter=10000)
+        for term in index.document_index.keys():
             if term == 'WORDCOUNT':
                 continue
             sum_tfcw = 0
@@ -50,8 +49,9 @@ class BM25(BaseAlgorithm):
                     (k1 + 1) * index.get_term_freq(term, docu) / (
                     k1 + (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
                     index.get_term_freq(term, docu)) + BM25_delta)
-                index_rank_list.append((docu, term, "BM25TLS", score))
-            set_index_bulk(index_rank_list)
+                # set_index(docu, term, "BM25TLS", score)
+                index_insert_handler.insert((docu, term, "BM25TLS", score))
+        index_insert_handler.save()
 
     @staticmethod
     def search_by_words(word_list):
