@@ -124,8 +124,16 @@ def get_all_index(key1=None, key2=None, key3=None):
         return []
 
 
-def set_index_bulk(bulk_index):
-    bulk_data = []
-    for i in bulk_index:
-        bulk_data.append(ArxivRank(paper=i[0], word=i[1], algorithm=i[2], rank_value=i[3]))
-    ArxivRank.objects.bulk_create(bulk_data)
+class IndexBulkInsert:
+    def __init__(self, save_iter=5000):
+        self.bulk_data = []
+        self.save_iter = save_iter
+
+    def insert(self, data):
+        self.bulk_data.append(ArxivRank(paper=data[0], word=data[1], algorithm=data[2], rank_value=data[3]))
+        if len(self.bulk_data) == self.save_iter:
+            ArxivRank.objects.bulk_create(self.bulk_data)
+            self.bulk_data = []
+
+    def save(self):
+        ArxivRank.objects.bulk_create(self.bulk_data)
