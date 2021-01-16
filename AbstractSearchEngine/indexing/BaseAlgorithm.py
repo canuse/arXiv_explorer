@@ -55,10 +55,25 @@ class BaseAlgorithm(ABC):
 
 
 class BaseIndex:
+    """
+    Class of indexing, recording DF and TF.
+    use BaseIndex.document_index (a dict) to store appearance of terms, keys are stemmed word and value is another dict,
+    containing appeared document and appear times.
+    use key 'WORDCOUNT' to store word count of every article.
+    example of BaseIndex.document_index:
+    {
+        'appl':{'0901.0001':1,'0901.0002':2,'0901.0005':10},
+        'egg':{'0902.0001':1,'0905.0002':2},...
+        'WORDCOUNT':{'0901.0001':100,'0901.0002':200,...},...
+    }
+    """
     def __init__(self):
         self.document_index = {}
 
     def add_term(self, term, arxiv_id):
+        """
+        add term to the index.
+        """
         if term not in self.document_index:
             self.document_index[term] = {arxiv_id: 1}
         else:
@@ -68,12 +83,18 @@ class BaseIndex:
                 self.document_index[term][arxiv_id] += 1
 
     def get_document_freq(self, term):
+        """
+        return the document frequency of a term
+        """
         if term in self.document_index:
             return len(self.document_index[term].keys())
         else:
             return 0
 
     def get_term_freq(self, term, arxiv_id):
+        """
+        return the term frequency in a document
+        """
         if term in self.document_index:
             if arxiv_id in self.document_index[term]:
                 return self.document_index[term][arxiv_id]
@@ -83,6 +104,9 @@ class BaseIndex:
             return 0
 
     def get_document_length(self, arxiv_id):
+        """
+        return the length of the given article
+        """
         if "WORDCOUNT" not in self.document_index:
             return 0
         if arxiv_id in self.document_index["WORDCOUNT"]:
