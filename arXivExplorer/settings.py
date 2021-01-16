@@ -83,6 +83,9 @@ DATABASES = {
         'PASSWORD': config['pg_password'],
         'HOST': config['pg_host'],
         'PORT': config['pg_port'],
+        'OPTIONS': {
+            'sslmode': 'disable',
+        }
     }
 }
 

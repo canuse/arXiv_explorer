@@ -1,5 +1,5 @@
 from Stemmer import Stemmer
-from AbstractSearchEngine.db.StemHistoryRedis import update_stem_history, query_origin_word
+from AbstractSearchEngine.db.StemHistory import update_stem_history, query_origin_word
 
 stemmer = Stemmer('porter')
 

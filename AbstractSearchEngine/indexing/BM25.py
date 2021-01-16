@@ -31,7 +31,7 @@ class BM25(BaseAlgorithm):
         document_number = len(document_length)
         avgdl = sum(document_length) / len(document_length)
         index_insert_handler = IndexBulkInsert(save_iter=10000)
-        for term in index.document_index.keys():
+        for term in tqdm(list(index.document_index.keys())):
             if term == 'WORDCOUNT':
                 continue
             sum_tfcw = 0
@@ -77,7 +77,8 @@ class BM25(BaseAlgorithm):
 
     @staticmethod
     def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
-        raw_article = BM25.search_by_words(word_list)[:nrel]
+        raw_article_t = BM25.search_by_words(word_list)[:nrel]
+        raw_article=[i[0] for i in raw_article_t]
         length = len(word_list)
         expand_word = BM25.get_article_topic(raw_article, 100)
         if allow_dup:
@@ -103,7 +104,7 @@ class BM25(BaseAlgorithm):
         new_word_rank = [(i, word_rank[i]) for i in word_rank]
         new_word_rank.sort(key=lambda x: x[-1], reverse=True)
         for i in range(min(nexp, len(new_word_rank))):
-            word_list.append(unstem(new_word_rank[i][0]))
+            word_list.append(new_word_rank[i][0])
         return word_list
 
     @staticmethod

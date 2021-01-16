@@ -48,10 +48,11 @@ def update_index(document_list=None):
             index.add_term(stem_term, doc.arxiv_id)
             index.add_term("WORDCOUNT", doc.arxiv_id)
     for i in tqdm(list(tt.keys())):
-        update_stem_history(i, tt[i])
+        update_stem_history(tt[i],i)
     save_index(index)
     BM25.update_index(index)
 
 
 if __name__ == "__main__":
-    a=BM25.search_by_words([stem("increase")])
+    # update_index()
+    a=BM25.get_relative_article(["1809.08404"])
