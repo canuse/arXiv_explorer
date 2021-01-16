@@ -1,3 +1,7 @@
+from AbstractSearchEngine.indexing.BM25 import BM25
+from AbstractSearchEngine.utils.ranking import borda_count
+
+
 def search_by_words(word_list):
     """[summary]
 
@@ -7,7 +11,9 @@ def search_by_words(word_list):
     Returns:
         list: list of article_id。不需要score。
     """
-    return []
+    bm25_result = BM25.search_by_words(word_list)
+    result = borda_count([bm25_result])
+    return [x[0] for x in result]
 
 
 def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
@@ -22,7 +28,9 @@ def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
     Returns:
         list: list of expended query。预计返回stem过之后的["apple banana fruit","apple banana orange".....]
     """
-    return []
+    bm25_result = BM25.query_expansion(word_list, nrel=10, nexp=2, allow_dup=True)
+
+    return bm25_result
 
 
 def get_relative_article(arxivID_list, nart=10):
@@ -35,4 +43,6 @@ def get_relative_article(arxivID_list, nart=10):
     Returns:
         list: list of article_id。不需要score。
     """
-    return []
+    bm25_result = BM25.get_relative_article(arxivID_list, nart=10)
+    result = borda_count([bm25_result])
+    return [x[0] for x in result]
