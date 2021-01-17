@@ -46,7 +46,6 @@ class TermAppearance(models.Model):
     word = models.TextField(blank=True, null=True)
     document_freq = models.IntegerField(blank=True, null=True)
     term_freq = models.TextField(blank=True, null=True)
-    id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
