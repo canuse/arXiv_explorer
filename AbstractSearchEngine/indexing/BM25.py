@@ -9,6 +9,7 @@ from tqdm import tqdm
 BM25_b = 0.3
 BM25_delta = 1
 BM25_preset = [0] + [(x / 1000) / ((x / 1000) - 1) * log((x / 1000)) if x != 1000 else 1 for x in range(1, 5000)]
+BM25_N = 2000000
 
 
 class BM25(BaseAlgorithm):
@@ -26,7 +27,15 @@ class BM25(BaseAlgorithm):
 
     @staticmethod
     def update_index(index: BaseIndex):
-        delete_all_index(key3="BM25TLS")
+        """
+        Update index with the given index.
+        work around: The average document length is not updated for index not affected, because the number of documents
+        is huge (~2M), and every day only ~500 documents are updated (0.025%), the average document length will be
+        almost irrivant.
+        However, it is recommended to update all index every month, or quarter, to gain better result.
+        work around2: The document number is changing, which will affect the value of IDF. In our approach, the N is set
+        to 2M.
+        """
         document_length = list(index.document_index['WORDCOUNT'].values())
         document_number = len(document_length)
         avgdl = sum(document_length) / len(document_length)
@@ -45,7 +54,7 @@ class BM25(BaseAlgorithm):
                 k1 += 1
             k1 = k1 / 1000
             for docu in index.document_index[term].keys():
-                score = log((document_number + 1) / index.get_document_freq(term)) * (
+                score = log(BM25_N / index.get_document_freq(term)) * (
                     (k1 + 1) * index.get_term_freq(term, docu) / (
                     k1 + (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
                     index.get_term_freq(term, docu)) + BM25_delta)
@@ -55,6 +64,9 @@ class BM25(BaseAlgorithm):
 
     @staticmethod
     def search_by_words(word_list):
+        """
+        please refer to the base function to see comment
+        """
         all_document = {}
         union_document = set()
         for term in word_list:
@@ -78,7 +90,7 @@ class BM25(BaseAlgorithm):
     @staticmethod
     def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
         raw_article_t = BM25.search_by_words(word_list)[:nrel]
-        raw_article=[i[0] for i in raw_article_t]
+        raw_article = [i[0] for i in raw_article_t]
         length = len(word_list)
         expand_word = BM25.get_article_topic(raw_article, 100)
         if allow_dup:
