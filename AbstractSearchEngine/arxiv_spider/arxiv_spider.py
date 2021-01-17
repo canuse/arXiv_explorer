@@ -65,6 +65,8 @@ def parse_metadata(xml_metadata):
         if len(tmp) > 2:
             authors_parsed.append(
                 [i.strip().split()[0].strip(), i.strip().split()[1].strip(), i.strip().split()[2].strip()])
+    if ArxivDocument.objects.filter(arxiv_id=id).exists():
+        return
     ad = ArxivDocument(arxiv_id=id, submitter=submitter, authors=authors, title=title, comments=comments, doi=doi,
                        report_no=report_no, categories=categories, journal_ref=journal_ref, license=license,
                        abstract=abstract, versions=json.dumps(versions), update_date=update_date,
@@ -108,6 +110,7 @@ def download_metadata():
 
     max_try = 2000
     finished = []
+    last = download_arxiv_id_list[-1]
     while len(download_arxiv_id_list) > 0 and max_try > 0:
         arxiv_id = download_arxiv_id_list.pop()
         try:
@@ -125,7 +128,7 @@ def download_metadata():
             max_try -= 1
             download_arxiv_id_list.insert(0, arxiv_id)
     with open('arxiv_download.log', 'w') as fout:
-        fout.write(download_arxiv_id_list[-1])
+        fout.write(last)
     return finished
 
 
