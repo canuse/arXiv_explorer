@@ -1,0 +1,5 @@
+tqdm
+redis
+PyStemmer
+psycopg2
+Django
