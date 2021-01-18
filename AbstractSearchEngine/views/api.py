@@ -24,7 +24,10 @@ def getDatial(request):
         arxiv_doc = get_arxiv_document_by_id(arxiv_id=arxiv_id)
         
         if arxiv_doc != None:
-            request.session.set['last_read'] = arxiv_id
+            # session initialization
+            if 'last_read' not in request.session:
+                request.session.set['last_read'] = []
+            request.session.set['last_read'].append(arxiv_id)
             
             ret_dict['arxiv_id'] = arxiv_doc.arxiv_id
             ret_dict['submitter'] = arxiv_doc.submitter
@@ -60,9 +63,9 @@ def getRecommendArticle(request):
     try:
         arxiv_id = request.GET.get("arxivID")
         if arxiv_id == '':
-            arxiv_id = request.session.get('last_read', '-1')
+            arxiv_ids = request.session.get('last_read', [])
             # TODO: 新用户没有搜索记录
-        return get_relative_article(arxiv_list=[arxiv_id], nart=10)  # TODO:参数含义
+        return get_relative_article(arxiv_list=arxiv_ids, nart=10)  # TODO:参数含义
     except Exception:
         traceback.print_exc()
 
