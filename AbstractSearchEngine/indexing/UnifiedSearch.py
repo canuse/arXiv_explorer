@@ -29,8 +29,8 @@ def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
         list: list of expended query。预计返回stem过之后的["apple banana fruit","apple banana orange".....]
     """
     bm25_result = BM25.query_expansion(word_list, nrel=10, nexp=2, allow_dup=True)
-
-    return bm25_result
+    result = borda_count([bm25_result], 'vote')
+    return result
 
 
 def get_relative_article(arxivID_list, nart=10):

@@ -66,5 +66,8 @@ def tokenize(content):
 
 
 def preprocess(content):
-    terms = tokenize(content)
+    """
+    preprocess the string. remove stopword, tolower, tokenize and stem
+    """
+    terms = tokenize(content.lower())
     return remove_stop_word(terms)

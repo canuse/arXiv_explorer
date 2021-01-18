@@ -5,6 +5,9 @@ stemmer = Stemmer('porter')
 
 
 def stem(term, record=False):
+    """
+    stem word
+    """
     stemmed_word = stemmer.stemWord(term)
     if record:
         update_stem_history(term, stemmed_word)
@@ -12,4 +15,7 @@ def stem(term, record=False):
 
 
 def unstem(stemmed_term):
+    """
+    unstem word
+    """
     return query_origin_word(stemmed_term)
