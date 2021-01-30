@@ -100,7 +100,18 @@
 
     </fieldset>
 </form>
-<div id="recommend">Recommends</div>
+<div id="queryExpan" hidden>You may want to search
+<div id="qe-0" class="pure-u-1-6"></div>
+<div id="qe-1" class="pure-u-1-6"></div>
+<div id="qe-2" class="pure-u-1-6"></div>
+<div id="qe-3" class="pure-u-1-6"></div>
+<div id="qe-4" class="pure-u-1-6"></div>
+<div id="qe-5" class="pure-u-1-6"></div>
+<div id="qe-6" class="pure-u-1-6"></div>
+<div id="qe-7" class="pure-u-1-6"></div>
+<div id="qe-8" class="pure-u-1-6"></div>
+<div id="qe-9" class="pure-u-1-6"></div>
+</div>
 <div id="searchResult">Search Results<br>
     <div id="result-0" class="pure-u-18-24"></div>
     <div id="result-1" class="pure-u-18-24"></div>
@@ -130,6 +141,7 @@
     <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page">next page
     </button>
 </div>
+<div id="recommend">Recommends</div>
 <script type="text/javascript">
     var url = "";
     var now = new Date();
@@ -146,6 +158,7 @@
             success: function (returnValue) {
                 console.log(returnValue);
                 document.getElementById("recommend").hidden = true;
+                document.getElementById("queryExpan").hidden = false;
                 document.getElementById("searchResult").hidden = false;
                 var j;
                 ret_list = returnValue.ret_list
@@ -172,7 +185,13 @@
             }
         })
     }
-
+    function queryExpansion(queryString){
+        document.getElementById("qe-0").innerHTML="a b c";
+        document.getElementById("qe-1").innerHTML="a b c d";
+        document.getElementById("qe-2").innerHTML="a b c e";
+        document.getElementById("qe-3").innerHTML="a b c 1";
+        document.getElementById("qe-4").innerHTML="a b c 2";
+    }
     function search() {
         console.log("search");
         var i;
@@ -189,6 +208,7 @@
 
         console.log(cat)
         url = "http://127.0.0.1:8000/api/query/?" + "queryString=" + document.getElementById("queryString").value + "&timeStart=" + document.getElementById("timeStart").value + "&timeEnd=" + document.getElementById("timeEnd").value + "&categories=" + cat;
+        queryExpansion();
         metasearch(url + "&offset=" + offset);
     }
 
