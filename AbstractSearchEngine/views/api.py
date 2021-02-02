@@ -6,6 +6,7 @@ from ..db.arXivDocument import *
 from ..indexing.UnifiedSearch import *
 from ..utils.preprocess import *
 from ..utils.stemmer import *
+from django.http import HttpResponse
 
 
 def getDatial(request):
@@ -44,7 +45,7 @@ def getDatial(request):
             ret_dict['update_date'] = arxiv_doc.update_date
             ret_dict['authors_parsed'] = arxiv_doc.authors_parsed
             
-        return json.dump(ret_dict)
+        return HttpResponse(json.dumps(ret_dict))
     except Exception:
         traceback.print_exc()
 
@@ -65,9 +66,31 @@ def getRecommendArticle(request):
         if arxiv_id == '':
             arxiv_ids = request.session.get('last_read', [])
             # TODO: 新用户没有搜索记录
-        return get_relative_article(arxiv_list=arxiv_ids, nart=10)  # TODO:参数含义
+        return HttpResponse(json.dumps({'ret_list':get_relative_article(arxiv_list=arxiv_ids, nart=10)}))  # TODO:参数含义
     except Exception:
         traceback.print_exc()
+
+
+def judge_category(request_categories, article_categories):
+    """判断文章类别是否符合请求类别
+
+    Args:
+        request_categories (list): 请求类别
+        article_categories (string): 文章类别
+
+    Returns:
+        boolean: 是否符合
+    """
+    #TODO:完善类别判断逻辑
+    
+    # 默认情况
+    if len(request_categories) == 0:
+        return True
+    # 命中
+    if article_categories in request_categories:
+        return True
+    
+    return False
 
 
 def query(request):
@@ -76,8 +99,8 @@ def query(request):
     Args:
         request (GET): queryString:String 查询的字符串
                         categories:String/Int 文章所属的领域，多个领域使用逗号分隔，例如"math.CO,quant-ph"
-                        timeStart:String yyyymm 最早发表日期(含)，both included
-                        timeEnd: String yyyymm 最晚发表日期(含)，both included
+                        timeStart:String yyyy-mm 最早发表日期(含)，both included
+                        timeEnd: String yyyy-mm 最晚发表日期(含)，both included
                         offset: int 起始位置(例如，offset=100,默认一页显示20条，那么返回搜索结果的第100-119项，方便前端分页。)
 
     Returns:
@@ -85,7 +108,7 @@ def query(request):
         一个排序好的list，按相关性从高到低，最多count项。
         一个int，表示一共多少个结果。
         例：
-        {[(article_id, title, abstract, authors, update_date)*20]，50}
+        {[(arxiv_id, title, abstract, authors, update_date)*20]，50}
         表示一共有50个搜索结果，本次查询返回的20个结果是上面显示的20个
     """   
     try:
@@ -97,7 +120,7 @@ def query(request):
         categories_raw = request.GET.get("categories")
         time_start_raw = timeConvert(request.GET.get("timeStart"))
         time_end_raw = timeConvert(request.GET.get("timeEnd"))
-        offset = request.GET.get("offset")
+        offset = int(request.GET.get("offset"))
         
         # 时间提取 # TODO:如果传入时间为空怎么办
         time_start_year = time_start_raw[:4]
@@ -122,7 +145,7 @@ def query(request):
             flag = True
             
             # 使用文章类别筛选
-            if (len(categories) == 0) or (doc.categories in categories):
+            if judge_category(categories, doc.categories):
                 flag = flag and True
             else:
                 flag = False
@@ -141,7 +164,7 @@ def query(request):
                 flag = False
             
             if flag:
-                ret_list.append((doc.article_id, doc.title,
+                ret_list.append((doc.arxiv_id, doc.title,
                             doc.abstract, doc.authors, doc.update_date))
         
         ret_dict['num'] = len(ret_list)
@@ -154,7 +177,7 @@ def query(request):
         else:
             ret_dict['ret_list'] = ret_list[offset:offset+20]
         
-        return json.dump(ret_dict)
+        return HttpResponse(json.dumps(ret_dict))
     except Exception:
         traceback.print_exc()
 
@@ -192,7 +215,7 @@ def queryExpansion(request):
                 words_unstem += unstem(w) + ' '
             ret_list.append(words_unstem[:-1])
         
-        return ret_list
+        return HttpResponse(json.dumps({'ret_list':ret_list}))
 
     except Exception:
         traceback.print_exc()
