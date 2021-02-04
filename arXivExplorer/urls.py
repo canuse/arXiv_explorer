@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from ..AbstractSearchEngine.views import api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/getDatial/', api.getDatial),
+    path('api/getRecommendArticle/', api.getRecommendArticle),
+    path('api/query/', api.query),
+    path('api/queryExpansion/', api.queryExpansion),
 ]
