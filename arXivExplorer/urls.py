@@ -19,8 +19,8 @@ from ..AbstractSearchEngine.views import api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('getDatial/', api.getDatial),
-    path('getRecommendArticle/', api.getRecommendArticle),
-    path('query/', api.query),
-    path('queryExpansion/', api.queryExpansion),
+    path('api/getDatial/', api.getDatial),
+    path('api/getRecommendArticle/', api.getRecommendArticle),
+    path('api/query/', api.query),
+    path('api/queryExpansion/', api.queryExpansion),
 ]
