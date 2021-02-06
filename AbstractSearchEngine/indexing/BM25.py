@@ -56,7 +56,7 @@ class BM25(BaseAlgorithm):
             for docu in index.document_index[term].keys():
                 score = log(BM25_N / index.get_document_freq(term)) * (
                     (k1 + 1) * index.get_term_freq(term, docu) / (
-                    k1 + (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
+                    k1 * (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
                     index.get_term_freq(term, docu)) + BM25_delta)
                 # set_index(docu, term, "BM25TLS", score)
                 index_insert_handler.insert((docu, term, "BM25TLS", score))

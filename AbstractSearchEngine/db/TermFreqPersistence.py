@@ -4,7 +4,8 @@ import json
 
 def set_term_freq(term, appear_dict):
     document_freq = len(appear_dict)
-    ta = TermAppearance(word=term, document_freq=document_freq, term_freq=json.dumps(appear_dict))
+    ta = TermAppearance.objects.update_or_create(word=term, document_freq=document_freq,
+                                                 term_freq=json.dumps(appear_dict))
     ta.save()
 
 
