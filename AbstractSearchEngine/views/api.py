@@ -63,10 +63,31 @@ def getRecommendArticle(request):
     """    
     try:
         arxiv_id = request.GET.get("arxivID")
+        
         if arxiv_id == '':
-            arxiv_ids = request.session.get('last_read', [])
-            # TODO: 新用户没有搜索记录
-        return HttpResponse(json.dumps({'ret_list':get_relative_article(arxiv_list=arxiv_ids, nart=10)}))  # TODO:参数含义
+            arxiv_ids = request.session.get('last_read', [])[-10:0]
+            if arxiv_ids == []:
+                #TODO: random 10 articles
+                pass
+            else: #recommand by session
+                pass
+        else: #recommand by arxiv_id
+            arxiv_ids = [arxiv_id]
+            pass
+        
+        rec_arxiv_ids = get_relative_article(arxiv_list=arxiv_ids, nart=10)
+        
+        ret_list = []
+        for rec_arxiv_id in rec_arxiv_ids:
+            arxiv_doc = get_arxiv_document_by_id(arxiv_id=rec_arxiv_id)
+            if arxiv_doc != None:
+                tmp = {}
+                tmp['arxiv_id'] = arxiv_doc.arxiv_id
+                tmp['authors'] = arxiv_doc.authors
+                tmp['title'] = arxiv_doc.title
+                ret_list.append(tmp)
+        
+        return HttpResponse(json.dumps({'ret_list': ret_list}))
     except Exception:
         traceback.print_exc()
 
