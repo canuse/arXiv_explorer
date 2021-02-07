@@ -21,6 +21,7 @@ class BM25(BaseAlgorithm):
     4. query expansion
     5. get top used words (for input completion)
     """
+    index_insert_handler = IndexBulkInsert(save_iter=10000)
 
     def __init__(self):
         super().__init__()
@@ -39,8 +40,9 @@ class BM25(BaseAlgorithm):
         document_length = list(index.document_index['WORDCOUNT'].values())
         document_number = len(document_length)
         avgdl = sum(document_length) / len(document_length)
-        index_insert_handler = IndexBulkInsert(save_iter=10000)
+
         for term in tqdm(list(index.document_index.keys())):
+            delete_all_index(key3="BM25TLS", key2=term)
             if term == 'WORDCOUNT':
                 continue
             sum_tfcw = 0
@@ -59,8 +61,8 @@ class BM25(BaseAlgorithm):
                     k1 * (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
                     index.get_term_freq(term, docu)) + BM25_delta)
                 # set_index(docu, term, "BM25TLS", score)
-                index_insert_handler.insert((docu, term, "BM25TLS", score))
-        index_insert_handler.save()
+                BM25.index_insert_handler.insert((docu, term, "BM25TLS", score))
+        BM25.index_insert_handler.save()
 
     @staticmethod
     def search_by_words(word_list):

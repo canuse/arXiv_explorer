@@ -4,9 +4,15 @@ import json
 
 def set_term_freq(term, appear_dict):
     document_freq = len(appear_dict)
-    ta = TermAppearance.objects.update_or_create(word=term, document_freq=document_freq,
-                                                 term_freq=json.dumps(appear_dict))
-    ta.save()
+    try:
+        tt = TermAppearance.objects.get(word=term)
+        tt.document_freq = document_freq
+        tt.term_freq = json.dumps(appear_dict)
+        tt.save()
+    except:
+        ta = TermAppearance(word=term, document_freq=document_freq,
+                            term_freq=json.dumps(appear_dict))
+        ta.save()
 
 
 def get_term_documents_freq(term):
@@ -26,7 +32,10 @@ def get_document_term_freq(term, document):
 
 
 def get_term_freq(term):
-    return json.loads(TermAppearance.objects.get(word=term).term_freq)
+    try:
+        return json.loads(TermAppearance.objects.get(word=term).term_freq)
+    except:
+        return {}
 
 
 def delete_all_index():
