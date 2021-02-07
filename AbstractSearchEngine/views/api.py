@@ -132,18 +132,18 @@ def query(request):
         # 解析request信息
         query_string_raw = request.GET.get("queryString")
         categories_raw = request.GET.get("categories")
-        time_start_raw = timeConvert(request.GET.get("timeStart"))
-        time_end_raw = timeConvert(request.GET.get("timeEnd"))
+        time_start_raw = request.GET.get("timeStart")
+        time_end_raw = request.GET.get("timeEnd")
         offset = int(request.GET.get("offset"))
         
-        # 时间提取 # TODO:如果传入时间为空怎么办
+        # 时间提取 
         time_start_year = time_start_raw[:4]
         time_start_month = time_start_raw[-2:]
         time_end_year = time_end_raw[:4]
         time_end_month = time_end_raw[-2:]
         
         # category info extraction
-        categories = categories_raw.split(',') # TODO: 空类别
+        categories = categories_raw.split(',')
         
         # preprocess and stemming
         query_string_list = [stem(query) for query in preprocess(query_string_raw)]
