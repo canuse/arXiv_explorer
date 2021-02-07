@@ -7,7 +7,13 @@ def update_stem_history(word, stemmed_word):
     """
     please design a table that has two columns, column 1 is stemmed word while column 2 is original word.
     """
-    StemPair.objects.update_or_create(value=word, key=stemmed_word)
+    try:
+        tt = StemPair.objects.get(key=stemmed_word)
+        tt.value = word
+        tt.save()
+    except:
+        ta = StemPair(value=word, key=stemmed_word)
+        ta.save()
 
 
 def query_origin_word(stemmed_word):

@@ -3,6 +3,7 @@ import json
 import django
 from django.conf import settings
 import os
+import unicodedata
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'arXiv_explorer.settings')
 django.setup()
@@ -24,7 +25,7 @@ def parse_metadata(xml_metadata):
     id = xml_tree.getElementsByTagName('id')[0].childNodes[0].nodeValue
     submitter = xml_tree.getElementsByTagName('submitter')[0].childNodes[0].nodeValue
     authors = xml_tree.getElementsByTagName('authors')[0].childNodes[0].nodeValue
-    title = xml_tree.getElementsByTagName('title')[0].childNodes[0].nodeValue
+    title = unicodedata.normalize("NFKD", xml_tree.getElementsByTagName('title')[0].childNodes[0].nodeValue)
     if len(xml_tree.getElementsByTagName('comments')) == 0:
         comments = None
     else:
@@ -46,7 +47,7 @@ def parse_metadata(xml_metadata):
         license = None
     else:
         license = xml_tree.getElementsByTagName('license')[0].childNodes[0].nodeValue
-    abstract = xml_tree.getElementsByTagName('abstract')[0].childNodes[0].nodeValue
+    abstract = unicodedata.normalize("NFKD", xml_tree.getElementsByTagName('abstract')[0].childNodes[0].nodeValue)
     raw_versions = xml_tree.getElementsByTagName('version')
     versions = []
     for index, i in enumerate(raw_versions):
@@ -113,6 +114,9 @@ def download_metadata():
     last = download_arxiv_id_list[-1]
     while len(download_arxiv_id_list) > 0 and max_try > 0:
         arxiv_id = download_arxiv_id_list.pop()
+        if ArxivDocument.objects.filter(arxiv_id=id).exists():
+            print("INFO:arxiv_id {0} already exist".format(arxiv_id))
+            continue
         try:
             xml_metadata = requests.get(
                 "http://export.arxiv.org/oai2?verb=GetRecord&identifier=oai:arXiv.org:{0}&metadataPrefix=arXivRaw".format(
@@ -133,4 +137,4 @@ def download_metadata():
 
 
 if __name__ == "__main__":
-    download_metadata()
+    fin = download_metadata()
