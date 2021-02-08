@@ -81,30 +81,21 @@ def judge_category(request_categories, article_category):
     Returns:
         boolean: 是否符合
     """
-    #TODO:完善类别判断逻辑
     
     # suggested by @canuse
     
     # default setting
     if len(request_categories) == 0:
-        return True
+        return False
     
     for req_category in request_categories:
-        if req_category == article_category:
+        if req_category in article_category:
             return True
         
-        # request='cs', article_categories = 'cs.CV'
-        if req_category+'.' in article_category:
+        if (req_category == 'other') and (article_category.count('.') != len(article_category.split())):
             return True
-        
-        # 'other' situation
-        if req_category == 'other':
-            return True
-        
-        # 判断.的个数是否和分类数一样，如果一样表示每个分类都是XX.YY的形式，不一样表示有旧的分类
-            pass
-        if article_category.count('.') != len(article_category.split()):
-            return True
+
+    return False
 
 
 def query(request):
