@@ -1,6 +1,4 @@
 from AbstractSearchEngine.models import StemPair
-
-
 # StemPair model has 2 columns: key -> word after stemming / value -> original word
 
 def update_stem_history(word, stemmed_word):
@@ -19,3 +17,18 @@ def update_stem_history(word, stemmed_word):
 def query_origin_word(stemmed_word):
     # return the latest original word
     return StemPair.objects.get(key=stemmed_word).value
+
+def auto_complete_query(prefix):
+    """
+    Auto complete the query by the input prefix.
+    :param prefix: the prefix of a input word
+    :return value: a list of stemmed words that match the prefix
+    """
+    candidate_words = []
+    try:
+        temp = StemPair.objects.filter(value__startswith=prefix)
+        for i in temp:
+            candidate_words.append(i.value)
+        return candidate_words
+    except:
+        return []
