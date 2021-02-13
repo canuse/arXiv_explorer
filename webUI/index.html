@@ -172,7 +172,7 @@
                 for (j = 0; j < ret_list.length; j++) {
                     console.log(j);
                     var divg = document.getElementById("result-" + j);
-                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id="+ret_list[j][0]+"\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " time " + ret_list[j][4] + "</p><p>abstract:" + ret_list[j][2] + "</p><p> </p>"
+                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id="+ret_list[j][0]+"\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " time " + ret_list[j][4] + "</p><p>abstract:" + ret_list[j][2] + "</p><p> </p>"
                 }
                 document.getElementById("current_result").innerHTML = "" + offset + "/" + returnValue.num;
                 document.getElementById("previous_page").classList.remove("pure-button-disabled");
