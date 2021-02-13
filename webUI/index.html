@@ -161,7 +161,7 @@
                 document.getElementById("queryExpan").hidden = false;
                 document.getElementById("searchResult").hidden = false;
                 var j;
-                var ret_list = returnValue.ret_list
+                var ret_list = returnValue[ret_list];
                 for (j = 0; j < ret_list.length; j++) {
                     console.log(j);
                     var divg = document.getElementById("result-" + j);
