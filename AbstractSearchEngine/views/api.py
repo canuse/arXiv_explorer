@@ -58,7 +58,7 @@ def getRecommendArticle(request):
         request (GET): arxivID：String，article的ID
 
     Returns:
-        list，最接近的文章的id（比如默认10个）
+        list，[(arxiv_id,title,author,category),...]
     """
     try:
         arxiv_id = request.GET.get("arxivID")

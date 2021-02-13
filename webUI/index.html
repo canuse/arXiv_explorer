@@ -136,7 +136,18 @@
     <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page">next page
     </button>
 </div>
-<div id="recommend">Recommends</div>
+<div id="recommend">Recommends<br>
+    <div id="recommend-0" class="pure-u-18-24"></div>
+    <div id="recommend-1" class="pure-u-18-24"></div>
+    <div id="recommend-2" class="pure-u-18-24"></div>
+    <div id="recommend-3" class="pure-u-18-24"></div>
+    <div id="recommend-4" class="pure-u-18-24"></div>
+    <div id="recommend-5" class="pure-u-18-24"></div>
+    <div id="recommend-6" class="pure-u-18-24"></div>
+    <div id="recommend-7" class="pure-u-18-24"></div>
+    <div id="recommend-8" class="pure-u-18-24"></div>
+    <div id="recommend-9" class="pure-u-18-24"></div>
+</div>
 <script type="text/javascript">
     var url = "";
     var now = new Date();
@@ -149,6 +160,9 @@
     if (ss!==false){
         document.getElementById("queryString").value=ss;
         search();
+    }else{
+        document.getElementById("recommend").hidden = true;
+
     }
     $("body").keydown(function () {
 			if (event.keyCode == "13"){
@@ -163,7 +177,7 @@
             dataType:'JSON',
             success: function (returnValue) {
                 console.log(returnValue);
-                document.getElementById("recommend").hidden = true;
+                document.getElementById("recommend").hidden = false;
                 document.getElementById("queryExpan").hidden = false;
                 document.getElementById("searchResult").hidden = false;
                 var j;
@@ -260,6 +274,27 @@
             }
         }
         return (false);
+    }
+    function getRecommendArticle() {
+        $.ajax({
+            url: "https://arxiv.canuse.xyz/api/getRecommendArticle/",
+            type: "get",
+            dataType:'JSON',
+            success: function (returnValue) {
+                console.log(returnValue);
+                var j;
+                var ret_list = returnValue["ret_list"];
+
+                for (j = 0; j < 10; j++) {
+                    var divg = document.getElementById("recommend-" + j);
+                    divg.innerHTML = divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id="+ret_list[j][0]+"\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " category: " + ret_list[j][4]+"</p>";
+                }
+            },
+            error: function (returnValue) {
+                console.log("error");
+                console.log(returnValue);
+            }
+        })
     }
 </script>
 </body>
