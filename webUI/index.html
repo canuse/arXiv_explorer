@@ -106,11 +106,6 @@
 <div id="qe-2" class="pure-u-1-6"></div>
 <div id="qe-3" class="pure-u-1-6"></div>
 <div id="qe-4" class="pure-u-1-6"></div>
-<div id="qe-5" class="pure-u-1-6"></div>
-<div id="qe-6" class="pure-u-1-6"></div>
-<div id="qe-7" class="pure-u-1-6"></div>
-<div id="qe-8" class="pure-u-1-6"></div>
-<div id="qe-9" class="pure-u-1-6"></div>
 </div>
 <div id="searchResult">Search Results<br>
     <div id="result-0" class="pure-u-18-24"></div>
@@ -207,7 +202,7 @@
                 var j;
                 var ret_list = returnValue["ret_list"];
 
-                for (j = 0; j < ret_list.length; j++) {
+                for (j = 0; j < 5; j++) {
                     var divg = document.getElementById("qe-" + j);
                     divg.innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search="+ret_list[j]+"\">"+ret_list[j]+"</a>";
                 }
