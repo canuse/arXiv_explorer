@@ -23,12 +23,11 @@ def getDatial(request):
         
         arxiv_id = request.GET.get("arxivID")
         arxiv_doc = get_arxiv_document_by_id(arxiv_id=arxiv_id)
-        
         if arxiv_doc != None:
             # session initialization
             if 'last_read' not in request.session:
-                request.session.set['last_read'] = []
-            request.session.set['last_read'].append(arxiv_id)
+                request.session['last_read'] = []
+            request.session['last_read'].append(arxiv_id)
             
             ret_dict['arxiv_id'] = arxiv_doc.arxiv_id
             ret_dict['submitter'] = arxiv_doc.submitter
