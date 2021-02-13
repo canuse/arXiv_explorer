@@ -170,7 +170,7 @@
                 var ret_list = returnValue["ret_list"];
 
                 for (j = 0; j < ret_list.length; j++) {
-                    console.log(j);
+                    //console.log(j);
                     var divg = document.getElementById("result-" + j);
                     divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id="+ret_list[j][0]+"\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " time " + ret_list[j][4] + "</p><p>abstract:" + ret_list[j][2] + "</p><p> </p>"
                 }
@@ -193,11 +193,25 @@
         })
     }
     function queryExpansion(queryString){
-        document.getElementById("qe-0").innerHTML="a b c";
-        document.getElementById("qe-1").innerHTML="a b c d";
-        document.getElementById("qe-2").innerHTML="a b c e";
-        document.getElementById("qe-3").innerHTML="a b c 1";
-        document.getElementById("qe-4").innerHTML="a b c 2";
+        $.ajax({
+            url: "http://arxiv.canuse.xyz/api/queryExpansion/?queryString="+queryString,
+            type: "get",
+            dataType:'JSON',
+            success: function (returnValue) {
+                console.log(returnValue);
+                var j;
+                var ret_list = returnValue["ret_list"];
+
+                for (j = 0; j < ret_list.length; j++) {
+                    var divg = document.getElementById("qe-" + j);
+                    divg.innerHTML = ret_list[j]
+                }
+            },
+            error: function (returnValue) {
+                console.log("error");
+                console.log(returnValue);
+            }
+        })
     }
     function search() {
         console.log("search");

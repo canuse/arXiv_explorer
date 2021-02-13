@@ -12,6 +12,7 @@
 </head>
 <body>
 <div id="display"></div>
+<div id="visitarxivpage"></div>
 <script>
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
@@ -37,7 +38,8 @@
                     "doi:"+returnValue.doi+" report number:"+returnValue.report_no+" journal_ref:"+returnValue.journal_ref+"</p><p>"+
                     "Category:"+returnValue.categories+"</p><p>"+returnValue.abstract+
                     "</p>"
-
+                var divg1 = document.getElementById("visitarxivpage");
+                divg1.innerHTML = "<a href=\"https://arxiv.org/abs/"+returnValue.arxiv_id+"\">Visit Arxiv Website</a>"
             },
             error: function (returnValue) {
                 console.log("error");

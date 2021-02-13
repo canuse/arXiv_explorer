@@ -22,7 +22,6 @@ class BM25(BaseAlgorithm):
     5. get top used words (for input completion)
     """
 
-
     def __init__(self):
         super().__init__()
 
@@ -42,7 +41,7 @@ class BM25(BaseAlgorithm):
         avgdl = sum(document_length) / len(document_length)
         index_insert_handler = IndexBulkInsert(save_iter=10000)
         for term in tqdm(list(index.document_index.keys())):
-            delete_all_index(key3="BM25TLS", key2=term)
+            #delete_all_index(key3="BM25TLS", key2=term)
             if term == 'WORDCOUNT':
                 continue
             sum_tfcw = 0
@@ -70,22 +69,17 @@ class BM25(BaseAlgorithm):
         please refer to the base function to see comment
         """
         all_document = {}
-        union_document = set()
         for term in word_list:
             term_document = get_all_index(key2=term, key3="BM25TLS")
-            all_document[term] = {}
             for i in term_document:
-                union_document.add(i[0])
-                all_document[term][i[0]] = i[3]
-        total_score = []
-        for arxiv_id in union_document:
-            score = 0
-            for term in word_list:
-                if arxiv_id in all_document[term]:
-                    score += all_document[term][arxiv_id]
+                # [i.paper, i.word, i.algorithm, i.rank_value]
+                if i[0] not in all_document:
+                    all_document[i[0]] = i[-1]
                 else:
-                    score += 0
-            total_score.append((arxiv_id, score))
+                    all_document[i[0]] += i[-1]
+        total_score = []
+        for i in all_document:
+            total_score.append((i, all_document[i]))
         total_score.sort(key=lambda x: x[-1], reverse=True)
         return total_score[:100]
 
@@ -94,7 +88,7 @@ class BM25(BaseAlgorithm):
         raw_article_t = BM25.search_by_words(word_list)[:nrel]
         raw_article = [i[0] for i in raw_article_t]
         length = len(word_list)
-        expand_word = BM25.get_article_topic(raw_article, 100)
+        expand_word = BM25.get_article_topic(raw_article, nexp + len(word_list))
         if allow_dup:
             for i in expand_word:
                 word_list.append(i)

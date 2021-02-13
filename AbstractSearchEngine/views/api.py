@@ -209,15 +209,11 @@ def queryExpansion(request):
 
         # return query_string_expanded_list by search words
         query_string_expanded_list = query_expansion(
-            word_list=query_string_list, nrel=10, nexp=2, allow_dup=True)#TODO:参数含义
+            word_list=query_string_list, nrel=5, nexp=5, allow_dup=False)#TODO:参数含义
         
         #TODO:是这么搞unstem么
-        for query in query_string_expanded_list:
-            words_unstem = ''
-            words = query.split(' ')
-            for w in words:
-                words_unstem += unstem(w) + ' '
-            ret_list.append(words_unstem[:-1])
+        for query in query_string_expanded_list[1:]:
+            ret_list.append(query_string_raw+' '+unstem(query[0]))
         
         return HttpResponse(json.dumps({'ret_list':ret_list}))
 

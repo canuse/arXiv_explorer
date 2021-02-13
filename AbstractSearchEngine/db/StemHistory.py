@@ -16,7 +16,10 @@ def update_stem_history(word, stemmed_word):
 
 def query_origin_word(stemmed_word):
     # return the latest original word
-    return StemPair.objects.get(key=stemmed_word).value
+    try:
+        return StemPair.objects.get(key=stemmed_word).value
+    except:
+        return ""
 
 def auto_complete_query(prefix):
     """

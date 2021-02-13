@@ -34,7 +34,7 @@ def borda_count(rank_lists, algorithm='0-1', max_score=100):
         if algorithm == '0-1':
             rr = zero_one_normalize(rank_list)
         else:
-            rr = vote(rank_lists, max_score)
+            rr = vote(rank_list, max_score)
         for i in rr:
             if i[0] not in borda_sum_dict:
                 borda_sum_dict[i[0]] = i[1]
