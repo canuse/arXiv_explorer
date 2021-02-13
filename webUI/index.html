@@ -100,7 +100,7 @@
 
     </fieldset>
 </form>
-<div id="queryExpan" hidden>You may want to search
+<div id="queryExpan" hidden>You may want to search <br>
 <div id="qe-0" class="pure-u-1-6"></div>
 <div id="qe-1" class="pure-u-1-6"></div>
 <div id="qe-2" class="pure-u-1-6"></div>
@@ -150,6 +150,11 @@
     var today = now.getFullYear() + "-" + (month);
     document.getElementById("timeEnd").value = (today);
     var offset = 0;
+    var ss=getQueryVariable(search);
+    if (ss!==false){
+        document.getElementById("queryString").value=ss;
+        search();
+    }
     $("body").keydown(function () {
 			if (event.keyCode == "13"){
 				search();
@@ -204,7 +209,7 @@
 
                 for (j = 0; j < ret_list.length; j++) {
                     var divg = document.getElementById("qe-" + j);
-                    divg.innerHTML = ret_list[j]
+                    divg.innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search="+ret_list[j]+"\">"+ret_list[j]+"</a>";
                 }
             },
             error: function (returnValue) {
@@ -249,6 +254,17 @@
     function showAdvance() {
         console.log("show advance search");
         document.getElementById("advSearch").hidden = false;
+    }
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
     }
 </script>
 </body>
