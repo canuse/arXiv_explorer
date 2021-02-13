@@ -229,7 +229,7 @@
 
         console.log(cat)
         url = "https://arxiv.canuse.xyz/api/query/?" + "queryString=" + document.getElementById("queryString").value + "&timeStart=" + document.getElementById("timeStart").value + "&timeEnd=" + document.getElementById("timeEnd").value + "&categories=" + cat;
-        queryExpansion();
+        queryExpansion(document.getElementById("queryString").value);
         metasearch(url + "&offset=" + offset);
     }
 
