@@ -112,9 +112,10 @@ def download_metadata():
     max_try = 2000
     finished = []
     last = download_arxiv_id_list[-1]
+
     while len(download_arxiv_id_list) > 0 and max_try > 0:
         arxiv_id = download_arxiv_id_list.pop()
-        if ArxivDocument.objects.filter(arxiv_id=id).exists():
+        if ArxivDocument.objects.filter(arxiv_id=arxiv_id).exists():
             print("INFO:arxiv_id {0} already exist".format(arxiv_id))
             continue
         try:
@@ -138,3 +139,4 @@ def download_metadata():
 
 if __name__ == "__main__":
     fin = download_metadata()
+
