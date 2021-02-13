@@ -5,6 +5,7 @@ from AbstractSearchEngine.db.IndexPersistence import get_index, set_index, delet
 from AbstractSearchEngine.indexing.BaseAlgorithm import BaseAlgorithm, BaseIndex
 from AbstractSearchEngine.utils.stemmer import unstem
 from tqdm import tqdm
+from functools import lru_cache
 
 BM25_b = 0.3
 BM25_delta = 1
@@ -41,7 +42,7 @@ class BM25(BaseAlgorithm):
         avgdl = sum(document_length) / len(document_length)
         index_insert_handler = IndexBulkInsert(save_iter=10000)
         for term in tqdm(list(index.document_index.keys())):
-            #delete_all_index(key3="BM25TLS", key2=term)
+            # delete_all_index(key3="BM25TLS", key2=term)
             if term == 'WORDCOUNT':
                 continue
             sum_tfcw = 0
@@ -64,19 +65,29 @@ class BM25(BaseAlgorithm):
         index_insert_handler.save()
 
     @staticmethod
+    @lru_cache(1)
+    def __search_term_doc(term):
+        # in development, set lru cache to 1
+        term_document = get_all_index(key2=term, key3="BM25TLS")
+        all_document = []
+        for i in term_document:
+            # [i.paper, i.word, i.algorithm, i.rank_value]
+            all_document[i[0]] = i[-1]
+        return all_document
+
+    @staticmethod
     def search_by_words(word_list):
         """
         please refer to the base function to see comment
         """
         all_document = {}
         for term in word_list:
-            term_document = get_all_index(key2=term, key3="BM25TLS")
-            for i in term_document:
-                # [i.paper, i.word, i.algorithm, i.rank_value]
-                if i[0] not in all_document:
-                    all_document[i[0]] = i[-1]
+            ad = BM25.__search_term_doc(term)
+            for i in ad:
+                if i not in all_document:
+                    all_document[i] = ad[i]
                 else:
-                    all_document[i[0]] += i[-1]
+                    all_document[i] += ad[i]
         total_score = []
         for i in all_document:
             total_score.append((i, all_document[i]))
@@ -103,17 +114,28 @@ class BM25(BaseAlgorithm):
         word_rank = {}
         word_list = []
         for docu in arxivID_list:
-            term_document = get_all_index(key1=docu, key3="BM25TLS")
-            for i in term_document:
-                if i[1] in word_rank:
-                    word_rank[i[1]] += i[3]
+            wr = BM25.__search_article_doc(docu)
+            for i in wr:
+                if i in word_rank:
+                    word_rank[i] += wr[i]
                 else:
-                    word_rank[i[1]] = i[3]
+                    word_rank[i] = wr[i]
         new_word_rank = [(i, word_rank[i]) for i in word_rank]
         new_word_rank.sort(key=lambda x: x[-1], reverse=True)
         for i in range(min(nexp, len(new_word_rank))):
             word_list.append(new_word_rank[i][0])
         return word_list
+
+    @staticmethod
+    @lru_cache(1)
+    def __search_article_doc(docu):
+        # in development, set lru cache to 1
+        term_document = get_all_index(key1=docu, key3="BM25TLS")
+        all_document = []
+        for i in term_document:
+            # [i.paper, i.word, i.algorithm, i.rank_value]
+            all_document[i[0]] = i[-1]
+        return all_document
 
     @staticmethod
     def get_relative_article(arxivID_list, nart=10):
