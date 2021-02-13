@@ -150,7 +150,7 @@
     var today = now.getFullYear() + "-" + (month);
     document.getElementById("timeEnd").value = (today);
     var offset = 0;
-    var ss=getQueryVariable(search);
+    var ss=getQueryVariable("search");
     if (ss!==false){
         document.getElementById("queryString").value=ss;
         search();
