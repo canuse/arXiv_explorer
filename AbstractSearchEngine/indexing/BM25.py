@@ -69,7 +69,7 @@ class BM25(BaseAlgorithm):
     def __search_term_doc(term):
         # in development, set lru cache to 1
         term_document = get_all_index(key2=term, key3="BM25TLS")
-        all_document = []
+        all_document = {}
         for i in term_document:
             # [i.paper, i.word, i.algorithm, i.rank_value]
             all_document[i[0]] = i[-1]
@@ -131,7 +131,7 @@ class BM25(BaseAlgorithm):
     def __search_article_doc(docu):
         # in development, set lru cache to 1
         term_document = get_all_index(key1=docu, key3="BM25TLS")
-        all_document = []
+        all_document = {}
         for i in term_document:
             # [i.paper, i.word, i.algorithm, i.rank_value]
             all_document[i[0]] = i[-1]
