@@ -207,7 +207,7 @@ def queryExpansion(request):
         # preprocess and stemming
         query_string_list = [stem(query) for query in preprocess(query_string_raw)]
         sbb = [stem(query) for query in preprocess(query_string_raw)]
-        if len(sbb)>=4:
+        if len(sbb)>5:
             return HttpResponse(json.dumps({'ret_list': []}))
         # return query_string_expanded_list by search words
         query_string_expanded_list = query_expansion(
