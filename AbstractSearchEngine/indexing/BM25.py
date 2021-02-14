@@ -134,7 +134,7 @@ class BM25(BaseAlgorithm):
         all_document = {}
         for i in term_document:
             # [i.paper, i.word, i.algorithm, i.rank_value]
-            all_document[i[0]] = i[-1]
+            all_document[i[1]] = i[-1]
         return all_document
 
     @staticmethod
