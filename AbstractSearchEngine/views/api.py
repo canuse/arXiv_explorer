@@ -276,9 +276,7 @@ def inputCompletion(request):
         num = 10 if len(completion_word_list) > 10 else len(completion_word_list)
         for i in range(num):
             ret_list.append(ret_query + " " + word)
-        
-       
-        
+
         return HttpResponse(json.dumps({'ret_list':query_string_list}))
 
     except Exception:
