@@ -277,7 +277,7 @@ def inputCompletion(request):
         for i in range(num):
             ret_list.append(ret_query + " " + completion_word_list[i])
 
-        return HttpResponse(json.dumps({'ret_list':query_string_list}))
+        return HttpResponse(json.dumps({'ret_list':ret_list}))
 
     except Exception:
         traceback.print_exc()
