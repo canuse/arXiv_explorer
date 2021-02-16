@@ -275,7 +275,7 @@ def inputCompletion(request):
         #拼接query
         num = 10 if len(completion_word_list) > 10 else len(completion_word_list)
         for i in range(num):
-            ret_list.append(ret_query + " " + completion_word_list[i])
+            ret_list.append(ret_query + " " + completion_word_list[i].value)
 
         return HttpResponse(json.dumps({'ret_list':ret_list}))
 
