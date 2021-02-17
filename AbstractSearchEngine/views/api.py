@@ -64,14 +64,17 @@ def getRecommendArticle(request):
     """    
     try:
         arxiv_id = request.GET.get("arxivID")
-        
+        arxiv_ids = []
         if arxiv_id == '':
-            arxiv_ids = request.session.get('last_read', [])[-10:0]
-            if arxiv_ids == []:
-                #TODO: random 10 articles
-                pass
-            else: #recommand by session
-                pass
+            last_read = request.session.get('last_read', [])
+            if len(last_read) >= 10:
+                arxiv_ids = last_read[-10:0]
+            else:
+                arxiv_ids.extend(last_read)
+                for range(10 - len(last_read)):
+                    pass
+                    #arxiv_ids.append(Random)
+
         else: #recommand by arxiv_id
             arxiv_ids = [arxiv_id]
             pass
