@@ -65,26 +65,20 @@ def getRecommendArticle(request):
     """    
     try:
         arxiv_id = request.GET.get("arxivID")
-        arxiv_ids = []
         if arxiv_id == '':
-            last_read = request.session.get('last_read', [])
             #recommand by recent read
-            if len(last_read) >= 10:
-                arxiv_ids = last_read[-10:0]
-            #recommand by random
-            else:
-                arxiv_ids.extend(last_read)
+            arxiv_ids = request.session.get('last_read', [])
+            
+            #recommand by random articles
+            if len(arxiv_ids) == 0:
                 #warehouse of some articles
                 warehouse_ids = ["1905.02895","1805.12518","1201.04733","2012.07580","0804.03881","1803.10109","1605.08889","1601.07883","1602.02387","1712.02628","1807.01662",
                                  "1907.00668","1507.00212","1907.01602","2008.02695","1206.04382","2003.00447","1611.00739","1205.06273","1505.00502","1809.00152","1501.04675"
                                 ,"1801.07367","1111.04795","1711.04149","1805.06821","1907.00317","1811.01658","1501.00662","1710.01653","1211.4105","2007.07447"]
-                random.shuffle(warehouse_ids)
-                #recommand by random articles
-                arxiv_ids.extend(warehouse_ids[0:(10 - len(last_read))])
+                arxiv_ids.append(random.choice(warehouse_ids))
 
         else: #recommand by arxiv_id
             arxiv_ids = [arxiv_id]
-            pass
         
         rec_arxiv_ids = get_relative_article(arxiv_list=arxiv_ids, nart=10)
         
