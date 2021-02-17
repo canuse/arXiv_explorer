@@ -71,9 +71,8 @@ def getRecommendArticle(request):
                 arxiv_ids = last_read[-10:0]
             else:
                 arxiv_ids.extend(last_read)
-                for range(10 - len(last_read)):
-                    pass
-                    #arxiv_ids.append(Random)
+                warehouse_ids = ["1905.02895","1805.12518","1201.4733","2012.07580","0804.3881","1803.10109","1605.08889","1601.07883","1602.02387","1712.02628"]
+                arxiv_ids.extend(warehouse_ids[0:(10 - len(last_read))])
 
         else: #recommand by arxiv_id
             arxiv_ids = [arxiv_id]
