@@ -68,7 +68,8 @@ def getRecommendArticle(request):
         if arxiv_id == '':
             #recommand by recent read
             arxiv_ids = request.session.get('last_read', [])
-            
+            if len(arxiv_ids) > 10:
+                arxiv_ids = arxiv_ids[-10,0]
             #recommand by random articles
             if len(arxiv_ids) == 0:
                 #warehouse of some articles
