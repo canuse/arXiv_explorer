@@ -3,10 +3,12 @@ import traceback
 import json
 from ..models import *
 from ..db.arXivDocument import *
+from ..db.getStemPair import *
 from ..indexing.UnifiedSearch import *
 from ..utils.preprocess import *
 from ..utils.stemmer import *
 from django.http import HttpResponse
+import random
 
 
 def getDatial(request):
@@ -63,9 +65,35 @@ def getRecommendArticle(request):
     try:
         arxiv_id = request.GET.get("arxivID")
         if arxiv_id == '':
+            #recommand by recent read
             arxiv_ids = request.session.get('last_read', [])
-            # TODO: 新用户没有搜索记录
-        return HttpResponse(json.dumps({'ret_list': get_relative_article(arxiv_list=arxiv_ids, nart=10)}))  # TODO:参数含义
+
+            if len(arxiv_ids) > 10:
+                arxiv_ids = arxiv_ids[-10,0]
+            #recommand by random articles
+            if len(arxiv_ids) == 0:
+                #warehouse of some articles
+                warehouse_ids = ["1905.02895","1805.12518","1201.04733","2012.07580","0804.03881","1803.10109","1605.08889","1601.07883","1602.02387","1712.02628","1807.01662",
+                                 "1907.00668","1507.00212","1907.01602","2008.02695","1206.04382","2003.00447","1611.00739","1205.06273","1505.00502","1809.00152","1501.04675"
+                                ,"1801.07367","1111.04795","1711.04149","1805.06821","1907.00317","1811.01658","1501.00662","1710.01653","1211.4105","2007.07447"]
+                arxiv_ids.append(random.choice(warehouse_ids))
+
+        else: #recommand by arxiv_id
+            arxiv_ids = [arxiv_id]
+        
+        rec_arxiv_ids = get_relative_article(arxiv_list=arxiv_ids, nart=10)
+        
+        ret_list = []
+        for rec_arxiv_id in rec_arxiv_ids:
+            arxiv_doc = get_arxiv_document_by_id(arxiv_id=rec_arxiv_id)
+            if arxiv_doc != None:
+                tmp = {}
+                tmp['arxiv_id'] = arxiv_doc.arxiv_id
+                tmp['authors'] = arxiv_doc.authors
+                tmp['title'] = arxiv_doc.title
+                ret_list.append(tmp)
+        
+        return HttpResponse(json.dumps({'ret_list': ret_list}))
     except Exception:
         traceback.print_exc()
 
@@ -218,6 +246,41 @@ def queryExpansion(request):
             ret_list.append(query_string_raw + ' ' + unstem(query[0]))
 
         return HttpResponse(json.dumps({'ret_list': ret_list}))
+
+    except Exception:
+        traceback.print_exc()
+
+  
+def inputCompletion(request):
+    """传入一个输入字符串，返回一个list，为输入补全后的结果。
+    
+    Args:
+        request (GET): queryString:String 查询的字符串
+                                        注意处理传入为空的情况。
+                        
+    Returns:
+        json
+        一个list，包括QE后的字符串（比如默认10个）
+        例如，输入 ”apple b“，返回["apple banana", "apple book",.....]
+    """
+    try:
+        ret_list = []       
+        ret_query = ""
+        # 解析request信息
+        query_string_raw = request.GET.get("queryString")
+        query_string_list = query_string_raw.split(" ")
+        ret_query = " ".join(query_string_list[0:-1])
+        last_word = query_string_list[-1]
+        
+        #获取补全后的单词
+        completion_word_list = get_stem_pair_by_key(last_word)
+        
+        #拼接query
+        num = 10 if len(completion_word_list) > 10 else len(completion_word_list)
+        for i in range(num):
+            ret_list.append(ret_query + " " + completion_word_list[i].value)
+
+        return HttpResponse(json.dumps({'ret_list':ret_list}))
 
     except Exception:
         traceback.print_exc()
