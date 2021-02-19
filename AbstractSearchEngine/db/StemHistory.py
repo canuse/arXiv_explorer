@@ -7,8 +7,7 @@ def update_stem_history(word, stemmed_word):
     """
     try:
         tt = StemPair.objects.get(key=stemmed_word)
-        tt.value = word
-        tt.save()
+        StemPair.objects.filter(key=stemmed_word).update(value=word)
     except:
         ta = StemPair(value=word, key=stemmed_word)
         ta.save()

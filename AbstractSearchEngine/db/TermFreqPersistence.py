@@ -6,9 +6,8 @@ def set_term_freq(term, appear_dict):
     document_freq = len(appear_dict)
     try:
         tt = TermAppearance.objects.get(word=term)
-        tt.document_freq = document_freq
-        tt.term_freq = json.dumps(appear_dict)
-        tt.save()
+        TermAppearance.objects.filter(word=term).update(document_freq=document_freq, term_freq=json.dumps(appear_dict))
+
     except:
         ta = TermAppearance(word=term, document_freq=document_freq,
                             term_freq=json.dumps(appear_dict))
@@ -18,7 +17,7 @@ def set_term_freq(term, appear_dict):
 def get_term_documents_freq(term):
     try:
         temp = TermAppearance.objects.get(word=term)
-        return len(json.loads(temp.term_freq))
+        return temp.document_freq
     except:
         return 0
 
