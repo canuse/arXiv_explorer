@@ -27,7 +27,7 @@ class BM25(BaseAlgorithm):
         super().__init__()
 
     @staticmethod
-    def update_index(index: BaseIndex):
+    def update_index(index: BaseIndex, delete=False):
         """
         Update index with the given index.
         work around: The average document length is not updated for index not affected, because the number of documents
@@ -42,7 +42,8 @@ class BM25(BaseAlgorithm):
         avgdl = sum(document_length) / len(document_length)
         index_insert_handler = IndexBulkInsert(save_iter=10000)
         for term in tqdm(list(index.document_index.keys())):
-            # delete_all_index(key3="BM25TLS", key2=term)
+            if delete:
+                delete_all_index(key3="BM25TLS", key2=term)
             if term == 'WORDCOUNT':
                 continue
             sum_tfcw = 0

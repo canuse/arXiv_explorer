@@ -4,8 +4,6 @@ import django
 from django.conf import settings
 import os
 
-
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'arXiv_explorer.settings')
 django.setup()
 from AbstractSearchEngine.indexing.UnifiedSearch import query_expansion
@@ -39,7 +37,7 @@ def update_all_index():
     index = BaseIndex()
     tt = {}
     for doc in tqdm(all_documnents):
-        terms = preprocess(doc.title.lower()+' '+doc.abstract.lower())
+        terms = preprocess(doc.title.lower() + ' ' + doc.abstract.lower())
         for term in terms:
             stem_term = stem(term)
             tt[stem_term] = term
@@ -47,10 +45,6 @@ def update_all_index():
             index.add_term("WORDCOUNT", doc.arxiv_id)
     del all_documnents
     gc.collect()
-
-    #index=BaseIndex()
-    #with open('index.json','r',encoding='UTF-8') as fout:
-    #    index.document_index=json.load(fout)
     for i in tqdm(list(tt.keys())):
         update_stem_history(tt[i], i)
     save_index(index)
@@ -63,7 +57,7 @@ def update_index(document_list):
     update index with given articles
     """
     all_documnents = []
-    for i in document_list:
+    for i in tqdm(document_list):
         all_documnents.append(get_arxiv_document_by_id(i))
     print(document_list)
     index = BaseIndex()
@@ -71,7 +65,7 @@ def update_index(document_list):
     index.document_index["WORDCOUNT"] = prev_term_index
     tt = {}
     for doc in tqdm(all_documnents):
-        terms = preprocess(doc.title.lower()+' '+doc.abstract.lower())
+        terms = preprocess(doc.title.lower() + ' ' + doc.abstract.lower())
         for term in terms:
             stem_term = stem(term)
             tt[stem_term] = term
@@ -83,19 +77,17 @@ def update_index(document_list):
     for i in tqdm(list(tt.keys())):
         update_stem_history(tt[i], i)
     save_index(index)
-    BM25.update_index(index)
+    BM25.update_index(index, delete=True)
 
 
 def update_data_norm():
     import unicodedata
     all_docu = get_all_arxiv_documents()
     for i in tqdm(all_docu):
-        i.title=unicodedata.normalize("NFKD",i.title)
-        i.abstract=unicodedata.normalize("NFKD",i.abstract)
+        i.title = unicodedata.normalize("NFKD", i.title)
+        i.abstract = unicodedata.normalize("NFKD", i.abstract)
         i.save()
 
+
 if __name__ == "__main__":
-    #update_index(finb)
-    #a = BM25.query_expansion(["computer"], nrel=4, nexp=10, allow_dup=False)
-    #update_data_norm()
     update_all_index()
