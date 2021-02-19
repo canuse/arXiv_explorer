@@ -1,6 +1,8 @@
 import datetime
 import traceback
 import json
+from django.views.decorators.csrf import csrf_exempt
+from ..db.StemHistory import auto_complete_query
 from ..models import *
 from ..db.arXivDocument import *
 from ..db.getStemPair import *
@@ -255,7 +257,7 @@ def queryExpansion(request):
     except Exception:
         traceback.print_exc()
 
-
+@csrf_exempt
 def inputCompletion(request):
     """传入一个输入字符串，返回一个list，为输入补全后的结果。
     
@@ -272,20 +274,20 @@ def inputCompletion(request):
         ret_list = []
         ret_query = ""
         # 解析request信息
-        query_string_raw = request.GET.get("queryString")
+        query_string_raw = request.POST.get("keyword")
         query_string_list = query_string_raw.split(" ")
         ret_query = " ".join(query_string_list[0:-1])
         last_word = query_string_list[-1]
 
         # 获取补全后的单词
-        completion_word_list = get_stem_pair_by_key(last_word)
+        completion_word_list = auto_complete_query(last_word)
 
         # 拼接query
         num = 10 if len(completion_word_list) > 10 else len(completion_word_list)
         for i in range(num):
-            ret_list.append(ret_query + " " + completion_word_list[i].value)
+            ret_list.append({"title":ret_query + " " + completion_word_list[i]})
 
-        return HttpResponse(json.dumps({'ret_list': ret_list}))
+        return HttpResponse(json.dumps({'data': ret_list}))
 
     except Exception:
         traceback.print_exc()

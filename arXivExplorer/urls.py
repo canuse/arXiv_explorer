@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/getRecommendArticle/', api.getRecommendArticle),
     path('api/query/', api.query),
     path('api/queryExpansion/', api.queryExpansion),
+    path('api/autoComplete/', api.inputCompletion),
 ]

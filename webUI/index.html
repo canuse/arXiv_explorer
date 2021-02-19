@@ -7,6 +7,8 @@
             src="https://code.jquery.com/jquery-3.5.1.min.js"
             integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
             crossorigin="anonymous"></script>
+    <script src="http://arxiv.canuse.xyz/js/jquery.bigautocomplete.js"></script>
+    <link rel="stylesheet" href="https://arxiv.canuse.xyz/js/jquery.bigautocomplete.css">
     <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/pure-min.css"
           integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" crossorigin="anonymous">
 </head>
@@ -101,11 +103,11 @@
     </fieldset>
 </form>
 <div id="queryExpan" hidden>You may want to search <br>
-<div id="qe-0" class="pure-u-1-6"></div>
-<div id="qe-1" class="pure-u-1-6"></div>
-<div id="qe-2" class="pure-u-1-6"></div>
-<div id="qe-3" class="pure-u-1-6"></div>
-<div id="qe-4" class="pure-u-1-6"></div>
+    <div id="qe-0" class="pure-u-1-6"></div>
+    <div id="qe-1" class="pure-u-1-6"></div>
+    <div id="qe-2" class="pure-u-1-6"></div>
+    <div id="qe-3" class="pure-u-1-6"></div>
+    <div id="qe-4" class="pure-u-1-6"></div>
 </div>
 <div id="searchResult">Search Results<br>
     <div id="result-0" class="pure-u-18-24"></div>
@@ -157,25 +159,35 @@
     var today = now.getFullYear() + "-" + (month);
     document.getElementById("timeEnd").value = (today);
     var offset = 0;
-    var ss=getQueryVariable("search");
-    if (ss!==false){
-        document.getElementById("queryString").value=ss;
+    var ss = getQueryVariable("search");
+    if (ss !== false) {
+        document.getElementById("queryString").value = ss;
         search();
-    }else{
+    } else {
         document.getElementById("recommend").hidden = false;
 
     }
+    $(function () {
+        $("#queryString").bigAutocomplete({
+            width: 543,
+            url: 'http://arxiv.canuse.xyz/api/autoComplete/',
+            callback: function (data) {
+                //alert(data.title);
+            }
+        });
+    });
     $("body").keydown(function () {
-			if (event.keyCode == "13"){
-				search();
-				event.returnValue = false;
-			}
-		});
+        if (event.keyCode == "13") {
+            search();
+            event.returnValue = false;
+        }
+    });
+
     function metasearch(uu) {
         $.ajax({
             url: uu,
             type: "get",
-            dataType:'JSON',
+            dataType: 'JSON',
             success: function (returnValue) {
                 console.log(returnValue);
                 document.getElementById("recommend").hidden = false;
@@ -187,7 +199,7 @@
                 for (j = 0; j < ret_list.length; j++) {
                     //console.log(j);
                     var divg = document.getElementById("result-" + j);
-                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id="+ret_list[j][0]+"\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " time " + ret_list[j][4] + "</p><p>abstract:" + ret_list[j][2] + "</p><p> </p>"
+                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " time " + ret_list[j][4] + "</p><p>abstract:" + ret_list[j][2] + "</p><p> </p>"
                 }
                 document.getElementById("current_result").innerHTML = "" + offset + "/" + returnValue.num;
                 document.getElementById("previous_page").classList.remove("pure-button-disabled");
@@ -207,11 +219,12 @@
             }
         })
     }
-    function queryExpansion(queryString){
+
+    function queryExpansion(queryString) {
         $.ajax({
-            url: "https://arxiv.canuse.xyz/api/queryExpansion/?queryString="+queryString,
+            url: "https://arxiv.canuse.xyz/api/queryExpansion/?queryString=" + queryString,
             type: "get",
-            dataType:'JSON',
+            dataType: 'JSON',
             success: function (returnValue) {
                 console.log(returnValue);
                 var j;
@@ -219,7 +232,7 @@
 
                 for (j = 0; j < ret_list.length; j++) {
                     var divg = document.getElementById("qe-" + j);
-                    divg.innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search="+ret_list[j]+"\">"+ret_list[j]+"</a>";
+                    divg.innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search=" + ret_list[j] + "\">" + ret_list[j] + "</a>";
                 }
             },
             error: function (returnValue) {
@@ -228,6 +241,7 @@
             }
         })
     }
+
     function search() {
         console.log("search");
         var i;
@@ -265,6 +279,7 @@
         console.log("show advance search");
         document.getElementById("advSearch").hidden = false;
     }
+
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
         var vars = query.split("&");
@@ -276,18 +291,19 @@
         }
         return (false);
     }
+
     function getRecommendArticle() {
         $.ajax({
             url: "https://arxiv.canuse.xyz/api/getRecommendArticle/",
             type: "get",
-            dataType:'JSON',
+            dataType: 'JSON',
             success: function (returnValue) {
                 var j;
                 var ret_list = returnValue["ret_list"];
                 for (j = 0; j < ret_list.length; j++) {
                     var divg = document.getElementById("recommend-" + j);
                     console.log(ret_list[j])
-                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id="+ret_list[j][0]+"\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][2] + " category: " + ret_list[j][3]+"</p>";
+                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][2] + " category: " + ret_list[j][3] + "</p>";
                 }
             },
             error: function (returnValue) {
