@@ -195,11 +195,19 @@
                 document.getElementById("searchResult").hidden = false;
                 var j;
                 var ret_list = returnValue["ret_list"];
-
                 for (j = 0; j < ret_list.length; j++) {
                     //console.log(j);
-                    var divg = document.getElementById("result-" + j);
-                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " time " + ret_list[j][4] + "</p><p>abstract:" + ret_list[j][2] + "</p><p> </p>"
+                    var divg2 = document.getElementById("result-" + j);
+                    divg2.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " time " + ret_list[j][4] + "</p><p>abstract:" + ret_list[j][2] + "</p><p> </p>"
+                }
+                for (j = ret_list.length; j < 20; j++) {
+                    //console.log(j);
+                    var divg3 = document.getElementById("result-" + j);
+                    divg3.innerHTML = ""
+                }
+                if (ret_list.length === 0) {
+                    var divg1 = document.getElementById("result-1");
+                    divg1.innerHTML = "no result found"
                 }
                 document.getElementById("current_result").innerHTML = "" + offset + "/" + returnValue.num;
                 document.getElementById("previous_page").classList.remove("pure-button-disabled");
@@ -233,6 +241,10 @@
                 for (j = 0; j < ret_list.length; j++) {
                     var divg = document.getElementById("qe-" + j);
                     divg.innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search=" + ret_list[j] + "\">" + ret_list[j] + "</a>";
+                }
+                for (j = ret_list.length; j < 5; j++) {
+                    var divg1 = document.getElementById("qe-" + j);
+                    divg1.innerHTML = "";
                 }
             },
             error: function (returnValue) {

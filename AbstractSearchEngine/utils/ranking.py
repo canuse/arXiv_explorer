@@ -3,6 +3,8 @@ def zero_one_normalize(list_in):
     zero_one zero_one_normalization.
     map input to 0-1
     """
+    if len(list_in) == 0:
+        return []
     value_list = [i[1] for i in list_in]
     max_num = max(value_list)
     min_num = max(value_list)
@@ -17,6 +19,8 @@ def zero_one_normalize(list_in):
 
 
 def vote(list_in, max_score):
+    if len(list_in) == 0:
+        return []
     ret_list = []
     for i in list_in:
         ret_list.append((i, max_score))
