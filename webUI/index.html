@@ -1,7 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        .center_search {
+        margin: auto;
+        width: 60%;
+    }
+        .center_image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 40%;
+    }
+    </style>
+    <style scoped="">
+        .button-border{
+            margin-left :2px
+        }
+    </style>
+    <style>
+    p {font-size:16px;}
+    p.main {text-align:justify;
+            font-size:20px;}
+    </style>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>arXiv abstract search engine</title>
     <script
             src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -17,15 +40,23 @@
     <fieldset>
         <div class="pure-g">
             <div class="pure-u-4-5">
-                <div class="pure-u-2-3"><input id="queryString" name="queryString" placeholder="Type Words Here"
+            <img src="logo1.png" alt="logo of the university" width="350" height="75">
+            </div>
+            <img src="title.png" alt="logo of the engine" class="center_image" height="100">
+        </div>
+        <div class="pure-g">
+            <div class="center_search">
+            <div class="pure-u-4-5">
+                <div class="pure-u-1">
+                    <input id="queryString" name="queryString" placeholder="Type Words Here"
                                                class="pure-u-23-24" autocomplete="off"/>
+                </div>
                 </div>
                 <button id="bts" type="button" class="pure-button pure-button-primary" onclick="search()">Search
                 </button>
-                <button type="button" class="pure-button pure-button-primary" onclick="showAdvance()" id="advance">
+                <button type="button" class="button-border pure-button pure-button-primary" onclick="showAdvance()" id="advance">
                     Advance
                 </button>
-            </div>
             <div class="pure-u-1" id="advSearch" hidden>
                 <div class="pure-u-4-5">
                     <div class="pure-u-1-3 pure-control-group"><label>Submitted After:</label> <input
@@ -98,18 +129,19 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
 
     </fieldset>
 </form>
-<div id="queryExpan" hidden>You may want to search <br>
+<div id="queryExpan" hidden><p class="main">You may want to search</p>
     <div id="qe-0" class="pure-u-1-6"></div>
     <div id="qe-1" class="pure-u-1-6"></div>
     <div id="qe-2" class="pure-u-1-6"></div>
     <div id="qe-3" class="pure-u-1-6"></div>
     <div id="qe-4" class="pure-u-1-6"></div>
 </div>
-<div id="searchResult">Search Results<br>
+<div id="searchResult"><p class="main">Search Results</p>
     <div id="result-0" class="pure-u-18-24"></div>
     <div id="result-1" class="pure-u-18-24"></div>
     <div id="result-2" class="pure-u-18-24"></div>
@@ -120,16 +152,16 @@
     <div id="result-7" class="pure-u-18-24"></div>
     <div id="result-8" class="pure-u-18-24"></div>
     <div id="result-9" class="pure-u-18-24"></div>
-    <div id="result-10" class="pure-u-18-24"></div>
-    <div id="result-11" class="pure-u-18-24"></div>
-    <div id="result-12" class="pure-u-18-24"></div>
-    <div id="result-13" class="pure-u-18-24"></div>
-    <div id="result-14" class="pure-u-18-24"></div>
-    <div id="result-15" class="pure-u-18-24"></div>
-    <div id="result-16" class="pure-u-18-24"></div>
-    <div id="result-17" class="pure-u-18-24"></div>
-    <div id="result-18" class="pure-u-18-24"></div>
-    <div id="result-19" class="pure-u-18-24"></div>
+<!--    <div id="result-10" class="pure-u-18-24"></div>-->
+<!--    <div id="result-11" class="pure-u-18-24"></div>-->
+<!--    <div id="result-12" class="pure-u-18-24"></div>-->
+<!--    <div id="result-13" class="pure-u-18-24"></div>-->
+<!--    <div id="result-14" class="pure-u-18-24"></div>-->
+<!--    <div id="result-15" class="pure-u-18-24"></div>-->
+<!--    <div id="result-16" class="pure-u-18-24"></div>-->
+<!--    <div id="result-17" class="pure-u-18-24"></div>-->
+<!--    <div id="result-18" class="pure-u-18-24"></div>-->
+<!--    <div id="result-19" class="pure-u-18-24"></div>-->
     <br>
     <button type="button" onclick="previous_page()" class="pure-button pure-button-disabled" id="previous_page">previous
         page
@@ -138,7 +170,7 @@
     <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page">next page
     </button>
 </div>
-<div id="recommend">Recommends<br>
+<br id="recommend"><p class="main">Recommends</p>
     <div id="recommend-0" class="pure-u-18-24"></div>
     <div id="recommend-1" class="pure-u-18-24"></div>
     <div id="recommend-2" class="pure-u-18-24"></div>
@@ -198,7 +230,7 @@
                 for (j = 0; j < ret_list.length; j++) {
                     //console.log(j);
                     var divg2 = document.getElementById("result-" + j);
-                    divg2.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][3] + " time " + ret_list[j][4] + "</p><p>abstract:" + ret_list[j][2] + "</p><p> </p>"
+                    divg2.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">" + ret_list[j][1] + " arxiv id:" + ret_list[j][0] + " </a> Author: " + ret_list[j][3] + " Time: " + ret_list[j][4] + "</p><p>Abstract:" + ret_list[j][2] + "</p><p> </p>"
                 }
                 for (j = ret_list.length; j < 20; j++) {
                     //console.log(j);
@@ -315,8 +347,9 @@
                 for (j = 0; j < ret_list.length; j++) {
                     var divg = document.getElementById("recommend-" + j);
                     console.log(ret_list[j])
-                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][2] + " category: " + ret_list[j][3] + "</p>";
-                }
+<!--                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][2] + " category: " + ret_list[j][3] + "</p>";-->
+                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">" + ret_list[j][1] + " arxiv id:" + ret_list[j][0] + " </a> Author: " + ret_list[j][2] + " Category: " + ret_list[j][3] + "</p>";
+                    }
             },
             error: function (returnValue) {
                 console.log("error");
@@ -324,6 +357,22 @@
             }
         })
     }
+</script>
+<script>
+var coll = document.getElementsByClassName("button-border pure-button pure-button-primary");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
 </script>
 </body>
 </html>
