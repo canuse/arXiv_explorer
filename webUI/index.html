@@ -23,6 +23,9 @@
     p {font-size:16px;}
     p.main {text-align:justify;
             font-size:20px;}
+    .box-move-right{
+        width:90%;
+        padding-left: 200px;}
     </style>
     <style>
         #myBtn {
@@ -57,7 +60,7 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/pure-min.css"
           integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" crossorigin="anonymous">
 </head>
-<body>
+<div>
 <form class="pure-form pure-form-aligned">
     <fieldset>
         <div class="pure-g">
@@ -97,55 +100,55 @@
                     <label>Article Categories</label>
                 </div>
                 <div class="pure-u-4-5">
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="astro-ph"/>
                         <label>Astrophysics</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="cond-mat"/>
                         <label>Condensed Matter</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="physics"/>
                         <label>Physics</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="math"/>
                         <label>Mathematics</label>
                     </div>
                 </div>
                 <div class="pure-u-4-5">
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="nlin"/>
                         <label>Nonlinear Sciences</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="cs"/>
                         <label>Computer Science</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="q-bio"/>
                         <label>Quantitative Biology</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="q-fin"/>
                         <label>Quantitative Finance</label>
                     </div>
                 </div>
                 <div class="pure-u-4-5">
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="stat"/>
                         <label>Statistics</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="eess"/>
                         <label>Electrical Engineering</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="econ"/>
                         <label>Economics</label>
                     </div>
-                    <div class="pure-u-1-5">
+                    <div class="pure-u-2-5">
                         <input type="checkbox" name="categories[]" checked="checked" value="other"/>
                         <label>Not Categorized</label>
                     </div>
@@ -156,6 +159,8 @@
 
     </fieldset>
 </form>
+
+<div class="box-move-right">
 <div id="queryExpan" hidden><p class="main">You may want to search</p>
     <div id="qe-0" class="pure-u-1-6"></div>
     <div id="qe-1" class="pure-u-1-6"></div>
@@ -169,7 +174,7 @@
 <br>
 <br>
 <br>
-<div id="searchResult"><p class="main">Search Results</p>
+<div id="searchResult" hidden><p class="main">Search Results</p>
     <div id="result-0" class="pure-u-18-24"></div>
     <br>
     <br>
@@ -235,10 +240,11 @@
     <button type="button" onclick="previous_page()" class="pure-button pure-button-disabled" id="previous_page">previous
         page
     </button>
+    <div id="current_result" style="display:inline-block"></div>
     <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page">next page
     </button>
     <br>
-    <div id="current_result"></div>
+
 
 </div>
 <br id="recommend"><p class="main">Recommends</p>
@@ -253,6 +259,7 @@
     <div id="recommend-8" class="pure-u-18-24"></div>
     <div id="recommend-9" class="pure-u-18-24"></div>
 </div>
+</div>
 <script type="text/javascript">
     getRecommendArticle();
     var url = "";
@@ -264,7 +271,7 @@
     var offset = 0;
     var ss = getQueryVariable("search");
     if (ss !== false) {
-        document.getElementById("queryString").value = ss;
+        document.getElementById("queryString").value = decodeURI(ss);
         search();
     } else {
         document.getElementById("recommend").hidden = false;
