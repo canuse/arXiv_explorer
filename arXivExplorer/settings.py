@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'AbstractSearchEngine',
     'corsheaders',
+    'django_apscheduler',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -156,3 +157,6 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'Pragma',
 )
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 100
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_SAVE_EVERY_REQUEST = True

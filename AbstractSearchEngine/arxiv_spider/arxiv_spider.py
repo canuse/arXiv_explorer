@@ -1,3 +1,4 @@
+import datetime
 import json
 
 import django
@@ -52,7 +53,10 @@ def parse_metadata(xml_metadata):
     versions = []
     for index, i in enumerate(raw_versions):
         versions.append({'version': "v{0}".format(index), 'created': i.childNodes[0].childNodes[0].nodeValue})
-    update_date = xml_tree.getElementsByTagName('datestamp')[0].childNodes[0].nodeValue
+    try:
+        update_date = xml_tree.getElementsByTagName('datestamp')[0].childNodes[0].nodeValue
+    except:
+        update_date = str(datetime.date.today())
     authors_parsed = []
     proc_a = authors.replace('\n', '').replace(' and ', '').replace(',and ', '')
     for i in proc_a.split(','):

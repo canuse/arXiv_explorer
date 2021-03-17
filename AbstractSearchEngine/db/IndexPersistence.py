@@ -128,12 +128,17 @@ class IndexBulkInsert:
     def __init__(self, save_iter=5000):
         self.bulk_data = []
         self.save_iter = save_iter
+        self.counter = 0
 
     def insert(self, data):
         self.bulk_data.append(ArxivRank(paper=data[0], word=data[1], algorithm=data[2], rank_value=data[3]))
+        self.counter += 1
         if len(self.bulk_data) == self.save_iter:
             ArxivRank.objects.bulk_create(self.bulk_data)
             self.bulk_data = []
 
     def save(self):
         ArxivRank.objects.bulk_create(self.bulk_data)
+        self.bulk_data = []
+        #print(self.counter)
+        self.counter = 0

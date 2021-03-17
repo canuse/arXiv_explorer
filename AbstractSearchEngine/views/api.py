@@ -11,7 +11,10 @@ from ..utils.preprocess import *
 from ..utils.stemmer import *
 from django.http import HttpResponse
 import random
-
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+from AbstractSearchEngine.arxiv_spider.arxiv_spider import download_metadata
+from AbstractSearchEngine.indexing.UpdateIndex import update_index_memory_optimize
 
 def getDatial(request):
     """输入文章id，返回文章的metadata。代表用户点击，记录session
@@ -291,3 +294,15 @@ def inputCompletion(request):
 
     except Exception:
         traceback.print_exc()
+
+scheduler = BackgroundScheduler()
+scheduler.add_jobstore(DjangoJobStore(), 'default')
+
+
+@register_job(scheduler, 'cron', id='test', hour=4, minute=0, args=['test'], replace_existing=True)
+def test(s):
+    fin = download_metadata()
+    update_index_memory_optimize(fin)
+
+register_events(scheduler)
+scheduler.start()

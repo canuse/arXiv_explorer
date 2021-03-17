@@ -41,11 +41,11 @@ class BM25(BaseAlgorithm):
         document_number = len(document_length)
         avgdl = sum(document_length) / len(document_length)
         index_insert_handler = IndexBulkInsert(save_iter=10000)
-        for term in tqdm(list(index.document_index.keys())):
-            if delete:
-                delete_all_index(key3="BM25TLS", key2=term)
+        for term in list(index.document_index.keys()):
             if term == 'WORDCOUNT':
                 continue
+            if delete:
+                delete_all_index(key3="BM25TLS", key2=term)
             sum_tfcw = 0
             for docu in index.document_index[term].keys():
                 sum_tfcw += log(index.get_term_freq(term, docu) / (1 - BM25_b + BM25_b * index.get_document_length(docu)
