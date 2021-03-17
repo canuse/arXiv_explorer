@@ -161,6 +161,7 @@
 </form>
 
 <div class="box-move-right">
+    <div id="totalpaper"></div>
 <div id="queryExpan" hidden><p class="main">You may want to search</p>
     <div id="qe-0" class="pure-u-1-6"></div>
     <div id="qe-1" class="pure-u-1-6"></div>
@@ -277,6 +278,7 @@
         document.getElementById("recommend").hidden = false;
 
     }
+    totalpaper();
     $(function () {
         $("#queryString").bigAutocomplete({
             width: 543,
@@ -429,9 +431,25 @@
                 for (j = 0; j < ret_list.length; j++) {
                     var divg = document.getElementById("recommend-" + j);
                     console.log(ret_list[j])
-<!--                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][2] + " category: " + ret_list[j][3] + "</p>";-->
+//<!--                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][2] + " category: " + ret_list[j][3] + "</p>";-->
                     divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">" + ret_list[j][1] + " arxiv id:" + ret_list[j][0] + " </a> Author: " + ret_list[j][2] + " Category: " + ret_list[j][3] + "</p>";
                     }
+            },
+            error: function (returnValue) {
+                console.log("error");
+                console.log(returnValue);
+            }
+        })
+    }
+    function totalpaper() {
+        $.ajax({
+            url: "https://arxiv.canuse.xyz/api/total_paper/",
+            type: "get",
+            dataType: 'JSON',
+            success: function (returnValue) {
+                var divg = document.getElementById("totalpaper");
+                divg.innerHTML=returnValue["data"]+" articles in the dataset, updated on "+today+'-'+day
+                console.log(returnValue);
             },
             error: function (returnValue) {
                 console.log("error");
