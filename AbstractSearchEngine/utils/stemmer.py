@@ -1,6 +1,6 @@
 from Stemmer import Stemmer
 from AbstractSearchEngine.db.StemHistory import update_stem_history, query_origin_word
-from functools import cache
+from functools import lru_cache
 
 stemmer = Stemmer('porter')
 
@@ -15,7 +15,7 @@ def stem(term, record=False):
     return stemmed_word
 
 
-@cache
+@lru_cache(maxsize=None)
 def unstem(stemmed_term):
     """
     unstem word

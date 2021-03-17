@@ -1,5 +1,5 @@
 from AbstractSearchEngine.models import StemPair
-from functools import cache
+from functools import lru_cache
 
 
 # StemPair model has 2 columns: key -> word after stemming / value -> original word
@@ -24,7 +24,7 @@ def query_origin_word(stemmed_word):
         return ""
 
 
-@cache
+@lru_cache(maxsize=None)
 def auto_complete_query(prefix):
     """
     Auto complete the query by the input prefix.
