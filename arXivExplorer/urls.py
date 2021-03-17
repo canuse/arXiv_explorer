@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/query/', api.query),
     path('api/queryExpansion/', api.queryExpansion),
     path('api/autoComplete/', api.inputCompletion),
+    path('api/total_paper/', api.get_total_paper),
 ]

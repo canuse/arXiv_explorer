@@ -90,7 +90,7 @@ def id2month(i: int):
 
 def download_metadata():
     with open('arxiv_download.log', 'r') as fin:
-        current_arxiv_id = fin.read()
+        current_arxiv_id, total_papers = [x.strip() for x in fin.readlines()]
     download_arxiv_id_list = []
 
     raw_submit_number = requests.get("https://arxiv.org/stats/get_monthly_submissions").content.decode()
@@ -137,10 +137,9 @@ def download_metadata():
             max_try -= 1
             download_arxiv_id_list.insert(0, arxiv_id)
     with open('arxiv_download.log', 'w') as fout:
-        fout.write(last)
+        fout.write(last + '\n' + str(int(total_papers) + len(finished)))
     return finished
 
 
 if __name__ == "__main__":
     fin = download_metadata()
-

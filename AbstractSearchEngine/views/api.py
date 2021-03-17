@@ -16,6 +16,7 @@ from django_apscheduler.jobstores import DjangoJobStore, register_events, regist
 from AbstractSearchEngine.arxiv_spider.arxiv_spider import download_metadata
 from AbstractSearchEngine.indexing.UpdateIndex import update_index_memory_optimize
 
+
 def getDatial(request):
     """输入文章id，返回文章的metadata。代表用户点击，记录session
 
@@ -260,6 +261,7 @@ def queryExpansion(request):
     except Exception:
         traceback.print_exc()
 
+
 @csrf_exempt
 def inputCompletion(request):
     """传入一个输入字符串，返回一个list，为输入补全后的结果。
@@ -288,12 +290,13 @@ def inputCompletion(request):
         # 拼接query
         num = 10 if len(completion_word_list) > 10 else len(completion_word_list)
         for i in range(num):
-            ret_list.append({"title":ret_query + " " + completion_word_list[i]})
+            ret_list.append({"title": ret_query + " " + completion_word_list[i]})
 
         return HttpResponse(json.dumps({'data': ret_list}))
 
     except Exception:
         traceback.print_exc()
+
 
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), 'default')
@@ -304,5 +307,12 @@ def test(s):
     fin = download_metadata()
     update_index_memory_optimize(fin)
 
+
 register_events(scheduler)
 scheduler.start()
+
+
+def get_total_paper(request):
+    with open('arxiv_download.log', 'r') as fin:
+        current_arxiv_id, total_papers = [x.strip() for x in fin.readlines()]
+    return HttpResponse(json.dumps({'data': total_papers}))
