@@ -58,9 +58,9 @@ class BM25(BaseAlgorithm):
             k1 = k1 / 1000
             for docu in index.document_index[term].keys():
                 score = log(BM25_N / index.get_document_freq(term)) * (
-                    (k1 + 1) * index.get_term_freq(term, docu) / (
-                    k1 * (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
-                    index.get_term_freq(term, docu)) + BM25_delta)
+                        (k1 + 1) * index.get_term_freq(term, docu) / (
+                        k1 * (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
+                        index.get_term_freq(term, docu)) + BM25_delta)
                 # set_index(docu, term, "BM25TLS", score)
                 index_insert_handler.insert((docu, term, "BM25TLS", score))
         index_insert_handler.save()
@@ -71,6 +71,7 @@ class BM25(BaseAlgorithm):
         # in development, set lru cache to 1
         term_document = get_all_index(key2=term, key3="BM25TLS")
         all_document = {}
+        
         for i in term_document:
             # [i.paper, i.word, i.algorithm, i.rank_value]
             all_document[i[0]] = i[-1]

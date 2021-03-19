@@ -63,7 +63,8 @@ class ArxivRank(models.Model):
     class Meta:
         managed = False
         db_table = 'arxiv_rank'
-
+        
+    
 """
 example:{
     "word": string "finit"
@@ -81,6 +82,8 @@ class StemPair(models.Model):
     class Meta:
         managed = False
         db_table = 'stem_pair'
+
+    
 
 """
 example:{

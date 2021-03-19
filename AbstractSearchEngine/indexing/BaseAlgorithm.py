@@ -5,6 +5,7 @@ class BaseAlgorithm(ABC):
     """
     Interface of algorithm class, every indexing algorithm should implement the following functions.
     """
+
     def __init__(self):
         pass
 
@@ -55,18 +56,43 @@ class BaseAlgorithm(ABC):
 
 
 class BaseIndex:
-    """
-    Class of indexing, recording DF and TF.
-    use BaseIndex.document_index (a dict) to store appearance of terms, keys are stemmed word and value is another dict,
-    containing appeared document and appear times.
-    use key 'WORDCOUNT' to store word count of every article.
-    example of BaseIndex.document_index:
-    {
-        'appl':{'0901.0001':1,'0901.0002':2,'0901.0005':10},
-        'egg':{'0902.0001':1,'0905.0002':2},...
-        'WORDCOUNT':{'0901.0001':100,'0901.0002':200,...},...
-    }
-    """
+    # """
+    #         Class of indexing, recording DF and TF.
+    #     use Baseid not in self.document_index[term]:
+    #                 self.document_index[term][arxiv_id] = 1
+    #             else:
+    #                 self.document_index[term][arxiv_id] += 1
+    #
+    #     def get_document_freq(self, term):
+    #         """
+    #     # return the document frequency of a term
+    #     """
+    #     if term in self.document_index:
+    #         return len(self.document_index[term].keys())
+    #     else:
+    #         return 0
+    #
+    # def get_term_freq(self, term, arxiv_id):
+    #     """
+    #     # return the term frequency in a document
+    #     """
+    #     if term in self.document_index:
+    #         if arxiv_id in self.document_index[term]:
+    #             return self.document_index[term][arxiv_id]
+    #         else:
+    #             return 0
+    #
+    # Index.document_index(a dict) to store appearance of terms, keys are stemmed word and value is another dict,
+    # containing appeared document and appear times.
+    # use key 'WORDCOUNT' to store word count of every article.
+    # example of BaseIndex.document_index:
+    # {
+    #     'appl':{'0901.0001':1,'0901.0002':2,'0901.0005':10},
+    #     'egg':{'0902.0001':1,'0905.0002':2},...
+    #     'WORDCOUNT':{'0901.0001':100,'0901.0002':200,...},...
+    # }
+    # """
+
     def __init__(self):
         self.document_index = {}
 
@@ -76,32 +102,16 @@ class BaseIndex:
         """
         if term not in self.document_index:
             self.document_index[term] = {arxiv_id: 1}
+        elif arxiv_id in self.document_index[term]:
+            self.document_index[term][arxiv_id] += 1
         else:
-            if arxiv_id not in self.document_index[term]:
-                self.document_index[term][arxiv_id] = 1
-            else:
-                self.document_index[term][arxiv_id] += 1
+            self.document_index[term][arxiv_id] = 1
 
-    def get_document_freq(self, term):
-        """
-        return the document frequency of a term
-        """
-        if term in self.document_index:
-            return len(self.document_index[term].keys())
-        else:
-            return 0
-
-    def get_term_freq(self, term, arxiv_id):
-        """
-        return the term frequency in a document
-        """
-        if term in self.document_index:
-            if arxiv_id in self.document_index[term]:
-                return self.document_index[term][arxiv_id]
-            else:
-                return 0
-        else:
-            return 0
+        if arxiv_id not in self.document_index["WORDCOUNT"]:
+            self.document_index["WORDCOUNT"][arxiv_id] = 1
+        # 加个else会比较好？
+        self.document_index["WORDCOUNT"][arxiv_id] += 1
+        return 0
 
     def get_document_length(self, arxiv_id):
         """
@@ -113,3 +123,22 @@ class BaseIndex:
             return self.document_index["WORDCOUNT"][arxiv_id]
         else:
             return 0
+
+    def get_document_freq(self, term):
+        """
+        # return the document frequency of a term
+        """
+        if term in self.document_index:
+            return len(self.document_index[term].keys())
+        else:
+            return 0
+
+    def get_term_freq(self, term, arxiv_id):
+        """
+        # return the term frequency in a document
+        """
+        if term in self.document_index:
+            if arxiv_id in self.document_index[term]:
+                return self.document_index[term][arxiv_id]
+            else:
+                return 0
