@@ -14,6 +14,7 @@ from AbstractSearchEngine.db.TermFreqPersistence import get_term_freq, set_term_
 from AbstractSearchEngine.db.IndexPersistence import delete_all_index as delete_BM25_all_index
 from AbstractSearchEngine.db.arXivDocument import get_all_arxiv_documents, get_arxiv_document_by_id
 from AbstractSearchEngine.indexing.BM25 import BM25
+from AbstractSearchEngine.indexing.TFIDF import TFIDF
 from AbstractSearchEngine.indexing.BaseAlgorithm import BaseIndex
 from AbstractSearchEngine.utils.preprocess import preprocess
 from AbstractSearchEngine.utils.stemmer import stem
@@ -45,11 +46,13 @@ def update_all_index():
             index.add_term("WORDCOUNT", doc.arxiv_id)
     del all_documnents
     gc.collect()
-    #for i in tqdm(list(tt.keys())):
+    # for i in tqdm(list(tt.keys())):
     #    update_stem_history(tt[i], i)
-    #save_index(index)
+    # save_index(index)
     delete_BM25_all_index(key3="BM25TLS")
     BM25.update_index(index)
+    delete_BM25_all_index(key3="TFIDF")
+    TFIDF.update_index(index)
 
 
 def update_index(document_list):
@@ -78,6 +81,7 @@ def update_index(document_list):
         update_stem_history(tt[i], i)
     save_index(index)
     BM25.update_index(index, delete=True)
+    TFIDF.update_index(index, delete=True)
 
 
 def update_index_memory_optimize(document_list):
@@ -115,11 +119,12 @@ def update_index_memory_optimize(document_list):
 
     wc = get_term_freq("WORDCOUNT")
     for i in tqdm(unique_term):
-        #print(i)
+        # print(i)
         index = BaseIndex()
         index.document_index["WORDCOUNT"] = wc
         index.document_index[i] = get_term_freq(i)
         BM25.update_index(index, delete=True)
+        TFIDF.update_index(index, delete=True)
         del index
 
 

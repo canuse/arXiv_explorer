@@ -1,5 +1,6 @@
 from AbstractSearchEngine.indexing.BM25 import BM25
 from AbstractSearchEngine.utils.ranking import borda_count
+from AbstractSearchEngine.indexing.TFIDF import TFIDF
 
 
 def search_by_words(word_list):
@@ -12,7 +13,9 @@ def search_by_words(word_list):
         list: list of article_id。不需要score。
     """
     bm25_result = BM25.search_by_words(word_list)
-    result = borda_count([bm25_result])
+    tfidf_result = TFIDF.search_by_words(word_list)
+
+    result = borda_count([bm25_result, tfidf_result])
     return [x[0] for x in result]
 
 
@@ -29,7 +32,8 @@ def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
         list: list of expended query。预计返回stem过之后的["apple banana fruit","apple banana orange".....]
     """
     bm25_result = BM25.query_expansion(word_list, nrel=nrel, nexp=nexp, allow_dup=allow_dup)
-    result = borda_count([bm25_result], algorithm='vote')
+    tfidf_result = TFIDF.query_expansion(word_list, nrel=nrel, nexp=nexp, allow_dup=allow_dup)
+    result = borda_count([bm25_result, tfidf_result], algorithm='vote')
     return result
 
 
@@ -44,5 +48,7 @@ def get_relative_article(arxivID_list, nart=10):
         list: list of article_id。不需要score。
     """
     bm25_result = BM25.get_relative_article(arxivID_list, nart=10)
-    result = borda_count([bm25_result])
+    tfidf_result = TFIDF.get_relative_article(arxivID_list, nart=10)
+
+    result = borda_count([bm25_result, tfidf_result])
     return [x[0] for x in result]
