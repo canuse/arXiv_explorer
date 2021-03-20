@@ -3,50 +3,61 @@
 <head>
     <style>
         .center_search {
-        margin: auto;
-        width: 60%;
-    }
+            margin: auto;
+            width: 60%;
+        }
+
         .center_image {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 40%;
-    }
-       .author {color:green}
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+        }
+
+        .author {
+            color: green
+        }
     </style>
     <style scoped="">
-        .button-border{
-            margin-left :2px
+        .button-border {
+            margin-left: 2px
         }
     </style>
     <style>
-    p {font-size:16px;}
-    p.main {text-align:justify;
-            font-size:20px;}
-    .box-move-right{
-        width:90%;
-        padding-left: 200px;}
+        p {
+            font-size: 16px;
+        }
+
+        p.main {
+            text-align: justify;
+            font-size: 20px;
+        }
+
+        .box-move-right {
+            width: 90%;
+            padding-left: 200px;
+        }
     </style>
     <style>
         #myBtn {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 30px;
-    z-index: 99;
-    font-size: 18px;
-    border: none;
-    outline: none;
-    background-color: black;
-    color: white;
-    cursor: pointer;
-    padding: 15px;
-    border-radius: 4px;
-    }
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 4px;
+        }
 
-    #myBtn:hover {
-    background-color: #555;
-    }
+        #myBtn:hover {
+            background-color: #555;
+        }
     </style>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -61,205 +72,209 @@
           integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd" crossorigin="anonymous">
 </head>
 <div>
-<form class="pure-form pure-form-aligned">
-    <fieldset>
-        <div class="pure-g">
-            <div class="pure-u-4-5">
-            <img src="logo1.png" alt="logo of the university" width="350" height="75">
+    <form class="pure-form pure-form-aligned">
+        <fieldset>
+            <div class="pure-g">
+                <div class="pure-u-4-5">
+                    <img src="logo1.png" alt="logo of the university" width="350" height="75">
+                </div>
+                <img src="title.png" alt="logo of the engine" class="center_image" height="100">
             </div>
-            <img src="title.png" alt="logo of the engine" class="center_image" height="100">
+            <div class="pure-g">
+                <div class="center_search">
+                    <div class="pure-u-3-5">
+                        <div class="pure-u-1">
+                            <input id="queryString" name="queryString" placeholder="Type Words Here"
+                                   class="pure-u-23-24" autocomplete="off"/>
+                        </div>
+                    </div>
+                    <button id="bts" type="button" class="pure-button pure-button-primary" onclick="search()">Search
+                    </button>
+                    <button type="button" class="button-border pure-button pure-button-primary" onclick="showAdvance()"
+                            id="advance">
+                        Advance
+                    </button>
+                    <div class="pure-u-1" id="advSearch" hidden>
+                        <div class="pure-u-4-5">
+                            <div class="pure-u-1-3 pure-control-group"><label>Submitted After:</label> <input
+                                    name="timeStart"
+                                    id="timeStart"
+                                    type="month"
+                                    value="1971-01"/>
+                            </div>
+                            <div class="pure-u-1-3 pure-control-group"><label>Submitted Before:</label> <input
+                                    name="timeEnd"
+                                    type="month"
+                                    id="timeEnd"
+                                    value=""/></div>
+                        </div>
+                        <div class="pure-u-4-5">
+                            <label>Article Categories</label>
+                        </div>
+                        <div class="pure-u-4-5">
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="astro-ph"/>
+                                <label>Astrophysics</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="cond-mat"/>
+                                <label>Condensed Matter</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="physics"/>
+                                <label>Physics</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="math"/>
+                                <label>Mathematics</label>
+                            </div>
+                        </div>
+                        <div class="pure-u-4-5">
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="nlin"/>
+                                <label>Nonlinear Sciences</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="cs"/>
+                                <label>Computer Science</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="q-bio"/>
+                                <label>Quantitative Biology</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="q-fin"/>
+                                <label>Quantitative Finance</label>
+                            </div>
+                        </div>
+                        <div class="pure-u-4-5">
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="stat"/>
+                                <label>Statistics</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="eess"/>
+                                <label>Electrical Engineering</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="econ"/>
+                                <label>Economics</label>
+                            </div>
+                            <div class="pure-u-2-5">
+                                <input type="checkbox" name="categories[]" checked="checked" value="other"/>
+                                <label>Not Categorized</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+    <div class="box-move-right">
+        <div id="totalpaper"></div>
+        <div id="queryExpan"><p class="main">You may want to search</p>
+            <div id="qe-0" class="pure-u-1-6"></div>
+            <div id="qe-1" class="pure-u-1-6"></div>
+            <div id="qe-2" class="pure-u-1-6"></div>
+            <div id="qe-3" class="pure-u-1-6"></div>
+            <div id="qe-4" class="pure-u-1-6"></div>
         </div>
-        <div class="pure-g">
-            <div class="center_search">
-            <div class="pure-u-3-5">
-                <div class="pure-u-1">
-                    <input id="queryString" name="queryString" placeholder="Type Words Here"
-                                               class="pure-u-23-24" autocomplete="off"/>
-                </div>
-                </div>
-                <button id="bts" type="button" class="pure-button pure-button-primary" onclick="search()">Search
-                </button>
-                <button type="button" class="button-border pure-button pure-button-primary" onclick="showAdvance()" id="advance">
-                    Advance
-                </button>
-            <div class="pure-u-1" id="advSearch" hidden>
-                <div class="pure-u-4-5">
-                    <div class="pure-u-1-3 pure-control-group"><label>Submitted After:</label> <input
-                            name="timeStart"
-                            id="timeStart"
-                            type="month"
-                            value="1971-01"/>
-                    </div>
-                    <div class="pure-u-1-3 pure-control-group"><label>Submitted Before:</label> <input
-                            name="timeEnd"
-                            type="month"
-                            id="timeEnd"
-                            value=""/></div>
-                </div>
-                <div class="pure-u-4-5">
-                    <label>Article Categories</label>
-                </div>
-                <div class="pure-u-4-5">
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="astro-ph"/>
-                        <label>Astrophysics</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="cond-mat"/>
-                        <label>Condensed Matter</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="physics"/>
-                        <label>Physics</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="math"/>
-                        <label>Mathematics</label>
-                    </div>
-                </div>
-                <div class="pure-u-4-5">
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="nlin"/>
-                        <label>Nonlinear Sciences</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="cs"/>
-                        <label>Computer Science</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="q-bio"/>
-                        <label>Quantitative Biology</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="q-fin"/>
-                        <label>Quantitative Finance</label>
-                    </div>
-                </div>
-                <div class="pure-u-4-5">
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="stat"/>
-                        <label>Statistics</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="eess"/>
-                        <label>Electrical Engineering</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="econ"/>
-                        <label>Economics</label>
-                    </div>
-                    <div class="pure-u-2-5">
-                        <input type="checkbox" name="categories[]" checked="checked" value="other"/>
-                        <label>Not Categorized</label>
-                    </div>
-                </div>
-            </div>
-            </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div id="searchResult" hidden><p class="main">Search Results</p>
+            <div id="result-0" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-1" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-2" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-3" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-4" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-5" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-6" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-7" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-8" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-9" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-10" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-11" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-12" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-13" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-14" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-15" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-16" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-17" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-18" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <div id="result-19" class="pure-u-18-24"></div>
+            <br>
+            <br>
+            <br>
+            <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+            <button type="button" onclick="previous_page()" class="pure-button pure-button-disabled" id="previous_page">
+                previous
+                page
+            </button>
+            <div id="current_result" style="display:inline-block"></div>
+            <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page">next
+                page
+            </button>
+            <br>
+
+
         </div>
-
-    </fieldset>
-</form>
-
-<div class="box-move-right">
-    <div id="totalpaper"></div>
-<div id="queryExpan"><p class="main">You may want to search</p>
-    <div id="qe-0" class="pure-u-1-6"><a href="https://arxiv.canuse.xyz/index.html?search=lstm">lstm</a></div>
-    <div id="qe-1" class="pure-u-1-6"><a href="https://arxiv.canuse.xyz/index.html?search=crnn">crnn</a></div>
-    <div id="qe-2" class="pure-u-1-6"><a href="https://arxiv.canuse.xyz/index.html?search=algorithm">algorithm</a></div>
-    <div id="qe-3" class="pure-u-1-6"><a href="https://arxiv.canuse.xyz/index.html?search=HPC">HPC</a></div>
-    <div id="qe-4" class="pure-u-1-6"><a href="https://arxiv.canuse.xyz/index.html?search=MPI">MPI</a></div>
-</div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div id="searchResult" hidden><p class="main">Search Results</p>
-    <div id="result-0" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-1" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-2" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-3" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-4" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-5" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-6" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-7" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-8" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-9" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-10" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-11" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-12" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-13" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-14" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-15" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-16" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-17" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-18" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <div id="result-19" class="pure-u-18-24"></div>
-    <br>
-    <br>
-    <br>
-    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
-    <button type="button" onclick="previous_page()" class="pure-button pure-button-disabled" id="previous_page">previous
-        page
-    </button>
-    <div id="current_result" style="display:inline-block"></div>
-    <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page">next page
-    </button>
-    <br>
-
-
-</div>
-<br id="recommend"><p class="main">Recommends</p>
-    <div id="recommend-0" class="pure-u-18-24"></div>
-    <div id="recommend-1" class="pure-u-18-24"></div>
-    <div id="recommend-2" class="pure-u-18-24"></div>
-    <div id="recommend-3" class="pure-u-18-24"></div>
-    <div id="recommend-4" class="pure-u-18-24"></div>
-    <div id="recommend-5" class="pure-u-18-24"></div>
-    <div id="recommend-6" class="pure-u-18-24"></div>
-    <div id="recommend-7" class="pure-u-18-24"></div>
-    <div id="recommend-8" class="pure-u-18-24"></div>
-    <div id="recommend-9" class="pure-u-18-24"></div>
-</div>
+        <br id="recommend">
+        <p class="main">Recommends</p>
+        <div id="recommend-0" class="pure-u-18-24"></div>
+        <div id="recommend-1" class="pure-u-18-24"></div>
+        <div id="recommend-2" class="pure-u-18-24"></div>
+        <div id="recommend-3" class="pure-u-18-24"></div>
+        <div id="recommend-4" class="pure-u-18-24"></div>
+        <div id="recommend-5" class="pure-u-18-24"></div>
+        <div id="recommend-6" class="pure-u-18-24"></div>
+        <div id="recommend-7" class="pure-u-18-24"></div>
+        <div id="recommend-8" class="pure-u-18-24"></div>
+        <div id="recommend-9" class="pure-u-18-24"></div>
+    </div>
 </div>
 <script type="text/javascript">
     getRecommendArticle();
@@ -276,7 +291,11 @@
         search();
     } else {
         document.getElementById("recommend").hidden = false;
-
+        document.getElementById("qe-0").innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search=lstm\">lstm</a>"
+        document.getElementById("qe-1").innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search=crnn\">crnn</a>"
+        document.getElementById("qe-2").innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search=HPC\">HPC</a>"
+        document.getElementById("qe-3").innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search=MPI\">MPI</a>"
+        document.getElementById("qe-4").innerHTML = "<a href=\"https://arxiv.canuse.xyz/index.html?search=Genetic\">Genetic</a>"
     }
     totalpaper();
     $(function () {
@@ -433,7 +452,7 @@
                     console.log(ret_list[j])
 //<!--                    divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">arxiv id:" + ret_list[j][0] + " title:" + ret_list[j][1] + "</a> author " + ret_list[j][2] + " category: " + ret_list[j][3] + "</p>";-->
                     divg.innerHTML = "<p><a href=\"https://arxiv.canuse.xyz/document.html?arxiv_id=" + ret_list[j][0] + "\" target=\"_blank\">" + ret_list[j][1] + " arxiv id:" + ret_list[j][0] + " </a> Author: " + ret_list[j][2] + " Category: " + ret_list[j][3] + "</p>";
-                    }
+                }
             },
             error: function (returnValue) {
                 console.log("error");
@@ -441,6 +460,7 @@
             }
         })
     }
+
     function totalpaper() {
         $.ajax({
             url: "https://arxiv.canuse.xyz/api/total_paper/",
@@ -448,7 +468,7 @@
             dataType: 'JSON',
             success: function (returnValue) {
                 var divg = document.getElementById("totalpaper");
-                divg.innerHTML=returnValue["data"]+" articles in the dataset, updated on "+today+'-'+day
+                divg.innerHTML = returnValue["data"] + " articles in the dataset, updated on " + today + '-' + day
                 console.log(returnValue);
             },
             error: function (returnValue) {
@@ -459,41 +479,43 @@
     }
 </script>
 <script>
-var coll = document.getElementsByClassName("button-border pure-button pure-button-primary");
-var i;
+    var coll = document.getElementsByClassName("button-border pure-button pure-button-primary");
+    var i;
 
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
     }
-  });
-}
 </script>
 <script>
-//Get the button
-var mybutton = document.getElementById("myBtn");
+    //Get the button
+    var mybutton = document.getElementById("myBtn");
 
-// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function() {scrollFunction()};
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction()
+    };
 
-function scrollFunction() {
-  if (document.body.scrollTop > 60 || document.documentElement.scrollTop > 60) {
-    mybutton.style.display = "block";
-  } else {
-    mybutton.style.display = "none";
-  }
-}
+    function scrollFunction() {
+        if (document.body.scrollTop > 60 || document.documentElement.scrollTop > 60) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
 
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-  document.body.scrollTop = 0;
-  document.documentElement.scrollTop = 0;
-}
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
 </script>
 </body>
 </html>
