@@ -42,13 +42,13 @@ def update_all_index():
         for term in terms:
             stem_term = stem(term)
             tt[stem_term] = term
-            index.add_term(stem_term, doc.arxiv_id)
             index.add_term("WORDCOUNT", doc.arxiv_id)
+            index.add_term(stem_term, doc.arxiv_id)
     del all_documnents
     gc.collect()
-    # for i in tqdm(list(tt.keys())):
-    #    update_stem_history(tt[i], i)
-    # save_index(index)
+    for i in tqdm(list(tt.keys())):
+        update_stem_history(tt[i], i)
+    save_index(index)
     delete_BM25_all_index(key3="BM25TLS")
     BM25.update_index(index)
     delete_BM25_all_index(key3="TFIDF")
@@ -93,10 +93,11 @@ def update_index_memory_optimize(document_list):
         all_documnents.append(get_arxiv_document_by_id(i))
     print(document_list)
     unique_term = set()
-    # prev_term_index = get_term_freq("WORDCOUNT")
-    # index.document_index["WORDCOUNT"] = prev_term_index
+    prev_term_index = get_term_freq("WORDCOUNT")
+
     tt = {}
     index = BaseIndex()
+    index.document_index["WORDCOUNT"] = prev_term_index
     for doc in tqdm(all_documnents):
 
         terms = preprocess(doc.title.lower() + ' ' + doc.abstract.lower())
@@ -146,3 +147,4 @@ if __name__ == "__main__":
         a.append("2102." + str(i))
     update_index_memory_optimize(a)'''
     update_index_memory_optimize(a)
+    # update_all_index()
