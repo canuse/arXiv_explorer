@@ -66,6 +66,7 @@ class BM25(BaseAlgorithm):
         index_insert_handler.save()
 
     @staticmethod
+    @lru_cache()
     def __search_term_doc(term):
         # in development, set lru cache to 1
         term_document = get_all_index(key2=term, key3="BM25TLS")
@@ -128,7 +129,7 @@ class BM25(BaseAlgorithm):
         return word_list
 
     @staticmethod
-    @lru_cache(16)
+    @lru_cache(maxsize=None)
     def __search_article_doc(docu):
         # in development, set lru cache to 1
         term_document = get_all_index(key1=docu, key3="BM25TLS")

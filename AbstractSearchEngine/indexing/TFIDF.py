@@ -43,6 +43,7 @@ class TFIDF(BaseAlgorithm):
         index_insert_handler.save()
 
     @staticmethod
+    @lru_cache()
     def __search_doc_by_term(term):
         term_document = get_all_index(key2=term, key3=algorithm_name)
         result = {}
@@ -116,7 +117,7 @@ class TFIDF(BaseAlgorithm):
         return word_list
 
     @staticmethod
-    @lru_cache(16)
+    @lru_cache(maxsize=None)
     def __search_article_by_doc(docu):
         # in development, set lru cache to 1
         term_document = get_all_index(key1=docu, key3=algorithm_name)
