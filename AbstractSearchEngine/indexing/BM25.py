@@ -58,9 +58,9 @@ class BM25(BaseAlgorithm):
             k1 = k1 / 1000
             for docu in index.document_index[term].keys():
                 score = log(BM25_N / index.get_document_freq(term)) * (
-                        (k1 + 1) * index.get_term_freq(term, docu) / (
-                        k1 * (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
-                        index.get_term_freq(term, docu)) + BM25_delta)
+                    (k1 + 1) * index.get_term_freq(term, docu) / (
+                    k1 * (1 - BM25_b + BM25_b * index.get_document_length(docu) / avgdl) +
+                    index.get_term_freq(term, docu)) + BM25_delta)
                 # set_index(docu, term, "BM25TLS", score)
                 index_insert_handler.insert((docu, term, "BM25TLS", score))
         index_insert_handler.save()
@@ -71,14 +71,14 @@ class BM25(BaseAlgorithm):
         # in development, set lru cache to 1
         term_document = get_all_index(key2=term, key3="BM25TLS")
         all_document = {}
-        
+
         for i in term_document:
             # [i.paper, i.word, i.algorithm, i.rank_value]
             all_document[i[0]] = i[-1]
         return all_document
 
     @staticmethod
-    def search_by_words(word_list):
+    def search_by_words(word_list, max_return=None):
         """
         please refer to the base function to see comment
         """
@@ -94,11 +94,14 @@ class BM25(BaseAlgorithm):
         for i in all_document:
             total_score.append((i, all_document[i]))
         total_score.sort(key=lambda x: x[-1], reverse=True)
-        return total_score, len(total_score)
+        if max_return is None:
+            return total_score, len(total_score)
+        else:
+            return total_score[:max_return], len(total_score)
 
     @staticmethod
     def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
-        raw_article_t = BM25.search_by_words(word_list)[:nrel][0]
+        raw_article_t = BM25.search_by_words(word_list, max_return=nrel)[:nrel][0]
         raw_article = [i[0] for i in raw_article_t]
         length = len(word_list)
         expand_word = BM25.get_article_topic(raw_article, nexp + len(word_list))
@@ -142,7 +145,7 @@ class BM25(BaseAlgorithm):
     @staticmethod
     def get_relative_article(arxivID_list, nart=10):
         topic_term = BM25.get_article_topic(arxivID_list, 10)
-        result = BM25.search_by_words(topic_term)[0]
+        result = BM25.search_by_words(topic_term, max_return=nart * 2)[0]
         ret = []
         cnt = 0
         for i in result:

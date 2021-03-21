@@ -53,7 +53,7 @@ class TFIDF(BaseAlgorithm):
         return result
 
     @staticmethod
-    def search_by_words(word_list):
+    def search_by_words(word_list, max_return=None):
         """
         searching using the index and algorithm
         word_list: a list of stemmed, tokenized word
@@ -73,7 +73,10 @@ class TFIDF(BaseAlgorithm):
         for doc in result:
             final_score.append((doc, result[doc]))
         final_score.sort(key=lambda x: x[-1], reverse=True)
-        return final_score, len(final_score)
+        if max_return is None:
+            return final_score, len(final_score)
+        else:
+            return final_score[:max_return], len(final_score)
 
     @staticmethod
     def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
@@ -86,7 +89,7 @@ class TFIDF(BaseAlgorithm):
         return: a list of word, containing original word list and expanded words
         example: input: ['appl', 'orang'] output: ['appl', 'orang', 'banana', 'fruit']
         """
-        raw_article_t = TFIDF.search_by_words(word_list)[:nrel][0]
+        raw_article_t = TFIDF.search_by_words(word_list, max_return=nrel)[:nrel][0]
         raw_article = [i[0] for i in raw_article_t]
         length = len(word_list)
         expand_word = TFIDF.get_article_topic(raw_article, nexp + len(word_list))
@@ -136,7 +139,7 @@ class TFIDF(BaseAlgorithm):
         return: a list of tuple, containing arxiv_id and relevance score
         """
         topic_term = TFIDF.get_article_topic(arxivID_list, 10)
-        result = TFIDF.search_by_words(topic_term)[0]
+        result = TFIDF.search_by_words(topic_term, max_return=nart * 2)[0]
         ret = []
         cnt = 0
         for doc in result:
