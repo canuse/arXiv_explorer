@@ -15,7 +15,7 @@ def stem(term, record=False):
     return stemmed_word
 
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=1024)
 def unstem(stemmed_term):
     """
     unstem word

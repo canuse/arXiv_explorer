@@ -117,7 +117,7 @@ class TFIDF(BaseAlgorithm):
         return word_list
 
     @staticmethod
-    @lru_cache(maxsize=None)
+    @lru_cache()
     def __search_article_by_doc(docu):
         # in development, set lru cache to 1
         term_document = get_all_index(key1=docu, key3=algorithm_name)
