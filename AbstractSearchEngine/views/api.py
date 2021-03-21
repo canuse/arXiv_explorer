@@ -176,7 +176,7 @@ def query(request):
 
     # preprocess and stemming
     query_string_list_1 = [stem(query) for query in preprocess(query_string_raw)]
-    query_string_list_1 = query_string_raw.sort()
+    query_string_list_1 = query_string_list_1.sort()
     query_string_list = tuple(query_string_list_1)
 
     # return arxiv_ids by search words
