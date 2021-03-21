@@ -188,6 +188,15 @@
         <br>
         <br>
         <div id="searchResult" hidden><p class="main">Search Results</p>
+            <div id="total"></div>
+            <button type="button" onclick="previous_page()" class="pure-button pure-button-disabled" id="previous_page">
+                previous
+                page
+            </button>
+            <div id="current_result1" style="display:inline-block"></div>
+            <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page">next
+                page
+            </button>
             <div id="result-0" class="pure-u-18-24"></div>
             <br>
             <br>
@@ -340,7 +349,10 @@
                     var divg1 = document.getElementById("result-1");
                     divg1.innerHTML = "no result found"
                 }
+                var divg1 = document.getElementById("total");
+                    divg1.innerHTML = "A total of "+returnValue.total+" found, displaying first "+Math.min(returnValue.total,returnValue.num)+" results."
                 document.getElementById("current_result").innerHTML = "" + offset + "/" + returnValue.num;
+                document.getElementById("current_result1").innerHTML = "" + offset + "/" + returnValue.num;
                 document.getElementById("previous_page").classList.remove("pure-button-disabled");
                 document.getElementById("next_page").classList.remove("pure-button-disabled");
                 if (offset === 0) {

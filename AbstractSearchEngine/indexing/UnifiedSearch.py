@@ -14,8 +14,8 @@ def search_by_words(word_list):
     Returns:
         list: list of article_id。不需要score。
     """
-    bm25_result, wc1 = BM25.search_by_words(word_list,500)
-    tfidf_result, wc2 = TFIDF.search_by_words(word_list,500)
+    bm25_result, wc1 = BM25.search_by_words(word_list, 200)
+    tfidf_result, wc2 = TFIDF.search_by_words(word_list, 200)
 
     result = borda_count([bm25_result, tfidf_result])
     return [x[0] for x in result], max(wc1, wc2)
