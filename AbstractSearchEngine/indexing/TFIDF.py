@@ -73,7 +73,7 @@ class TFIDF(BaseAlgorithm):
         for doc in result:
             final_score.append((doc, result[doc]))
         final_score.sort(key=lambda x: x[-1], reverse=True)
-        return final_score[:100], len(final_score)
+        return final_score, len(final_score)
 
     @staticmethod
     def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):

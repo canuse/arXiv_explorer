@@ -94,7 +94,7 @@ class BM25(BaseAlgorithm):
         for i in all_document:
             total_score.append((i, all_document[i]))
         total_score.sort(key=lambda x: x[-1], reverse=True)
-        return total_score[:100], len(total_score)
+        return total_score, len(total_score)
 
     @staticmethod
     def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
