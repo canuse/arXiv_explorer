@@ -175,7 +175,9 @@ def query(request):
     categories = categories_raw.split(',')
 
     # preprocess and stemming
-    query_string_list = [stem(query) for query in preprocess(query_string_raw)]
+    query_string_list_1 = [stem(query) for query in preprocess(query_string_raw)]
+    query_string_list_1 = query_string_raw.sort()
+    query_string_list = tuple(query_string_list_1)
 
     # return arxiv_ids by search words
     arxiv_ids, wc = search_by_words(word_list=query_string_list)
@@ -222,7 +224,6 @@ def query(request):
         ret_dict['ret_list'] = ret_list[offset:offset + 20]
 
     return HttpResponse(json.dumps(ret_dict))
-
 
 
 def queryExpansion(request):
