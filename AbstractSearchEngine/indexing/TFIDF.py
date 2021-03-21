@@ -86,7 +86,7 @@ class TFIDF(BaseAlgorithm):
         return: a list of word, containing original word list and expanded words
         example: input: ['appl', 'orang'] output: ['appl', 'orang', 'banana', 'fruit']
         """
-        raw_article_t = TFIDF.search_by_words(word_list)[:nrel]
+        raw_article_t = TFIDF.search_by_words(word_list)[:nrel][0]
         raw_article = [i[0] for i in raw_article_t]
         length = len(word_list)
         expand_word = TFIDF.get_article_topic(raw_article, nexp + len(word_list))
@@ -136,7 +136,7 @@ class TFIDF(BaseAlgorithm):
         return: a list of tuple, containing arxiv_id and relevance score
         """
         topic_term = TFIDF.get_article_topic(arxivID_list, 10)
-        result = TFIDF.search_by_words(topic_term)
+        result = TFIDF.search_by_words(topic_term)[0]
         ret = []
         cnt = 0
         for doc in result:

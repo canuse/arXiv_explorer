@@ -98,7 +98,7 @@ class BM25(BaseAlgorithm):
 
     @staticmethod
     def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
-        raw_article_t = BM25.search_by_words(word_list)[:nrel]
+        raw_article_t = BM25.search_by_words(word_list)[:nrel][0]
         raw_article = [i[0] for i in raw_article_t]
         length = len(word_list)
         expand_word = BM25.get_article_topic(raw_article, nexp + len(word_list))
@@ -142,7 +142,7 @@ class BM25(BaseAlgorithm):
     @staticmethod
     def get_relative_article(arxivID_list, nart=10):
         topic_term = BM25.get_article_topic(arxivID_list, 10)
-        result = BM25.search_by_words(topic_term)
+        result = BM25.search_by_words(topic_term)[0]
         ret = []
         cnt = 0
         for i in result:
