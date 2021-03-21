@@ -18,7 +18,7 @@ def search_by_words(word_list):
     tfidf_result, wc2 = TFIDF.search_by_words(word_list, 200)
 
     result = borda_count([bm25_result, tfidf_result])
-    return [x[0] for x in result], max(wc1, wc2)
+    return [x[0] for x in result][:200], max(wc1, wc2)
 
 
 def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
@@ -38,7 +38,7 @@ def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):
     result = borda_count([bm25_result, tfidf_result], algorithm='vote')
     return result
 
-
+@lru_cache()
 def get_relative_article(arxivID_list, nart=10):
     """[summary]
 

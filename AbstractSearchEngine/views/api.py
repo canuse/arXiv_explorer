@@ -95,7 +95,7 @@ def getRecommendArticle(request):
                 return HttpResponse(json.dumps({'ret_list': ret_list}))
         else:  # recommand by arxiv_id
             arxiv_ids = [arxiv_id]
-        rec_arxiv_ids = get_relative_article(arxiv_ids, nart=10)
+        rec_arxiv_ids = get_relative_article(tuple(arxiv_ids), nart=10)
 
         ret_list = []
         for rec_arxiv_id in rec_arxiv_ids:
