@@ -189,12 +189,12 @@
         <br>
         <div id="searchResult" hidden><p class="main">Search Results</p>
             <div id="total"></div>
-            <button type="button" onclick="previous_page()" class="pure-button pure-button-disabled" id="previous_page">
+            <button type="button" onclick="previous_page()" class="pure-button pure-button-disabled" id="previous_page1">
                 previous
                 page
             </button>
             <div id="current_result1" style="display:inline-block"></div>
-            <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page">next
+            <button type="button" onclick="next_page()" class="pure-button pure-button-disabled" id="next_page1">next
                 page
             </button>
             <br>
@@ -356,12 +356,16 @@
                 document.getElementById("current_result").innerHTML = "" + offset + "/" + returnValue.num;
                 document.getElementById("current_result1").innerHTML = "" + offset + "/" + returnValue.num;
                 document.getElementById("previous_page").classList.remove("pure-button-disabled");
+                document.getElementById("previous_page1").classList.remove("pure-button-disabled");
                 document.getElementById("next_page").classList.remove("pure-button-disabled");
+                document.getElementById("next_page1").classList.remove("pure-button-disabled");
                 if (offset === 0) {
                     document.getElementById("previous_page").classList.add("pure-button-disabled")
+                    document.getElementById("previous_page1").classList.add("pure-button-disabled")
                 }
                 if (offset + 20 >= returnValue.num) {
                     document.getElementById("next_page").classList.add("pure-button-disabled")
+                    document.getElementById("next_page1").classList.add("pure-button-disabled")
                 }
 
 
