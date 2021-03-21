@@ -1,8 +1,10 @@
 from AbstractSearchEngine.indexing.BM25 import BM25
 from AbstractSearchEngine.utils.ranking import borda_count
 from AbstractSearchEngine.indexing.TFIDF import TFIDF
+from functools import lru_cache
 
 
+@lru_cache()
 def search_by_words(word_list):
     """[summary]
 
@@ -12,11 +14,11 @@ def search_by_words(word_list):
     Returns:
         list: list of article_id。不需要score。
     """
-    bm25_result = BM25.search_by_words(word_list)
-    tfidf_result = TFIDF.search_by_words(word_list)
+    bm25_result, wc1 = BM25.search_by_words(word_list)
+    tfidf_result, wc2 = TFIDF.search_by_words(word_list)
 
     result = borda_count([bm25_result, tfidf_result])
-    return [x[0] for x in result]
+    return [x[0] for x in result], max(wc1, wc2)
 
 
 def query_expansion(word_list, nrel=10, nexp=2, allow_dup=True):

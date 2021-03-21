@@ -178,7 +178,7 @@ def query(request):
         query_string_list = [stem(query) for query in preprocess(query_string_raw)]
 
         # return arxiv_ids by search words
-        arxiv_ids = search_by_words(word_list=query_string_list)
+        arxiv_ids, wc = search_by_words(word_list=query_string_list)
 
         # return arxiv_docs by arxiv_ids
         arxiv_docs = get_arxiv_document_by_ids(arxiv_ids)
@@ -211,6 +211,7 @@ def query(request):
                                  doc.abstract, doc.authors, doc.update_date))
 
         ret_dict['num'] = len(ret_list)
+        ret_dict['total'] = wc
 
         # 边界条件
         if len(ret_list) <= offset:
@@ -302,7 +303,7 @@ scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), 'default')
 
 
-@register_job(scheduler, 'cron', id='test', hour=4, minute=0, args=['test'], replace_existing=True)
+@register_job(scheduler, 'cron', id='test', hour=21, minute=30, args=['test'], replace_existing=True)
 def test(s):
     fin = download_metadata()
     update_index_memory_optimize(fin)
