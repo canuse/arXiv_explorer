@@ -154,76 +154,75 @@ def query(request):
         {[(arxiv_id, title, abstract, authors, update_date)*20]，50}
         表示一共有50个搜索结果，本次查询返回的20个结果是上面显示的20个
     """
-    try:
-        ret_list = []
-        ret_dict = {'ret_list': ret_list, 'num': 0}
 
-        # 解析request信息
-        query_string_raw = request.GET.get("queryString")
-        categories_raw = request.GET.get("categories")
-        time_start_raw = request.GET.get("timeStart")
-        time_end_raw = request.GET.get("timeEnd")
-        offset = int(request.GET.get("offset"))
+    ret_list = []
+    ret_dict = {'ret_list': ret_list, 'num': 0}
 
-        # 时间提取 
-        time_start_year = time_start_raw[:4]
-        time_start_month = time_start_raw[-2:]
-        time_end_year = time_end_raw[:4]
-        time_end_month = time_end_raw[-2:]
+    # 解析request信息
+    query_string_raw = request.GET.get("queryString")
+    categories_raw = request.GET.get("categories")
+    time_start_raw = request.GET.get("timeStart")
+    time_end_raw = request.GET.get("timeEnd")
+    offset = int(request.GET.get("offset"))
 
-        # category info extraction
-        categories = categories_raw.split(',')
+    # 时间提取
+    time_start_year = time_start_raw[:4]
+    time_start_month = time_start_raw[-2:]
+    time_end_year = time_end_raw[:4]
+    time_end_month = time_end_raw[-2:]
 
-        # preprocess and stemming
-        query_string_list = [stem(query) for query in preprocess(query_string_raw)]
+    # category info extraction
+    categories = categories_raw.split(',')
 
-        # return arxiv_ids by search words
-        arxiv_ids, wc = search_by_words(word_list=query_string_list)
+    # preprocess and stemming
+    query_string_list = [stem(query) for query in preprocess(query_string_raw)]
 
-        # return arxiv_docs by arxiv_ids
-        arxiv_docs = get_arxiv_document_by_ids(arxiv_ids)
+    # return arxiv_ids by search words
+    arxiv_ids, wc = search_by_words(word_list=query_string_list)
 
-        # 条件筛选
-        for doc in arxiv_docs:
-            flag = True
+    # return arxiv_docs by arxiv_ids
+    arxiv_docs = get_arxiv_document_by_ids(arxiv_ids)
 
-            # 使用文章类别筛选
-            if judge_category(categories, doc.categories):
-                flag = flag and True
-            else:
-                flag = False
+    # 条件筛选
+    for doc in arxiv_docs:
+        flag = True
 
-            # 使用发表年、月筛选
-            # TODO:如果doc的update_date为空怎么办
-            doc_year = doc.update_date.split('-')[0]
-            doc_month = doc.update_date.split('-')[1]
-            if (time_start_year == doc_year) and (time_start_month <= doc_month):
-                flag = flag and True
-            elif (time_end_year == doc_year) and (doc_month <= time_end_month):
-                flag = flag and True
-            elif time_start_year <= doc_year <= time_end_year:
-                flag = flag and True
-            else:
-                flag = False
-
-            if flag:
-                ret_list.append((doc.arxiv_id, doc.title,
-                                 doc.abstract, doc.authors, doc.update_date))
-
-        ret_dict['num'] = len(ret_list)
-        ret_dict['total'] = wc
-
-        # 边界条件
-        if len(ret_list) <= offset:
-            ret_dict['ret_list'] = ret_list[:]
-        elif offset < len(ret_list) <= (offset + 20):
-            ret_dict['ret_list'] = ret_list[offset:]
+        # 使用文章类别筛选
+        if judge_category(categories, doc.categories):
+            flag = flag and True
         else:
-            ret_dict['ret_list'] = ret_list[offset:offset + 20]
+            flag = False
 
-        return HttpResponse(json.dumps(ret_dict))
-    except Exception:
-        traceback.print_exc()
+        # 使用发表年、月筛选
+        # TODO:如果doc的update_date为空怎么办
+        doc_year = doc.update_date.split('-')[0]
+        doc_month = doc.update_date.split('-')[1]
+        if (time_start_year == doc_year) and (time_start_month <= doc_month):
+            flag = flag and True
+        elif (time_end_year == doc_year) and (doc_month <= time_end_month):
+            flag = flag and True
+        elif time_start_year <= doc_year <= time_end_year:
+            flag = flag and True
+        else:
+            flag = False
+
+        if flag:
+            ret_list.append((doc.arxiv_id, doc.title,
+                             doc.abstract, doc.authors, doc.update_date))
+
+    ret_dict['num'] = len(ret_list)
+    ret_dict['total'] = wc
+
+    # 边界条件
+    if len(ret_list) <= offset:
+        ret_dict['ret_list'] = ret_list[:]
+    elif offset < len(ret_list) <= (offset + 20):
+        ret_dict['ret_list'] = ret_list[offset:]
+    else:
+        ret_dict['ret_list'] = ret_list[offset:offset + 20]
+
+    return HttpResponse(json.dumps(ret_dict))
+
 
 
 def queryExpansion(request):
