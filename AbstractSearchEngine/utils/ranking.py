@@ -7,7 +7,7 @@ def zero_one_normalize(list_in):
         return []
     value_list = [i[1] for i in list_in]
     max_num = max(value_list)
-    min_num = max(value_list)
+    min_num = min(value_list)
     return_list = []
     if max_num == min_num:
         for i in list_in:
